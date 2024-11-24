@@ -363,11 +363,11 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-            <div className="flex items-start gap-10 mt-9 mb-9 ">
-              <div className="w-[490] ">
+            <div className="flex w-[100%] items-start gap-10 mt-9 mb-9 ">
+              <div className=" w-[496px] h-[410px] p-2 bg-[#D9D9D9] rounded-md  ">
                 <Graph chartData={transactionData} />
               </div>
-              <div className="w-[400] ">
+              <div className="p-2 w-[500px] h-[420px] bg-[#D9D9D9] rounded-md ">
                 <ChartPie chartData={chartData} />
               </div>
             </div>
