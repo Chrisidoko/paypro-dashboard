@@ -4,7 +4,6 @@ import {
   LucideFolderOpen,
   LucideChevronRight,
   LucideLayers,
-  LucideChevronDown,
 } from "lucide-react";
 
 import Sidebar from "../mycomponents/side-nav";

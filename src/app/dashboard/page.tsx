@@ -10,13 +10,10 @@ import {
   LucideAward,
   LucideDatabaseBackup,
   LucideUser2,
-  LucideUserCircle2,
 } from "lucide-react";
 
 import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
-
-import { logout } from "../login/action";
 
 import Sidebar from "../mycomponents/side-nav";
 

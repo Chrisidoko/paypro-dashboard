@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use server";
 
 import { z } from "zod";
 import { createSession, deleteSession } from "../lib/session";
 import { redirect } from "next/navigation";
-
-
 
 const testUsers = [
   {
@@ -17,14 +17,14 @@ const testUsers = [
   {
     id: "2",
     email: "user1@example.com",
-    username:"COE GIDAN WAYA",
+    username: "COE GIDAN WAYA",
     password: "password123",
     role: "user", // Example differentiation field
   },
   {
     id: "3",
     email: "user2@example.com",
-    username:"KADUNA STATE UNIVERSITY",
+    username: "KADUNA STATE UNIVERSITY",
     password: "password123",
     role: "user", // Example differentiation field
   },
@@ -49,21 +49,20 @@ export async function login(prevState: any, formData: FormData) {
 
   const { email, password } = result.data;
 
-    // Check credentials against test users
-    const user = testUsers.find(
-      (u) => u.email === email && u.password === password
-    );
+  // Check credentials against test users
+  const user = testUsers.find(
+    (u) => u.email === email && u.password === password
+  );
 
-    if (!user) {
-      return {
-        errors: {
-          email: ["Invalid email or password"],
-        },
-      };
-    }
+  if (!user) {
+    return {
+      errors: {
+        email: ["Invalid email or password"],
+      },
+    };
+  }
 
   await createSession(user.id); // Store user ID in session
-  
 
   redirect("/dashboard");
 }

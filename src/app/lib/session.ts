@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
@@ -9,7 +10,7 @@ const encodedKey = new TextEncoder().encode(secretKey);
 type User = {
   id: string;
   email: string;
-  username: string,
+  username: string;
   role: "admin" | "user"; // Use string literals for role if it's constrained
 };
 
@@ -23,17 +24,16 @@ const testUsers: User[] = [
   {
     id: "2",
     email: "user1@example.com",
-    username:"COE GIDAN WAYA",
+    username: "COE GIDAN WAYA",
     role: "user",
   },
   {
     id: "3",
     email: "user2@example.com",
-    username:"KADUNA STATE UNIVERSITY",
+    username: "KADUNA STATE UNIVERSITY",
     role: "user",
   },
 ];
-
 
 export async function createSession(userId: string) {
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -75,12 +75,20 @@ export async function decrypt(session: string | undefined = "") {
 }
 
 // Retrieve the current user based on the session
-export async function getUserBySession(): Promise<{ id: string; email: string; role: string } | null> {
+export async function getUserBySession(): Promise<{
+  id: string;
+  email: string;
+  role: string;
+} | null> {
   const sessionCookie = (await cookies()).get("session")?.value;
   if (!sessionCookie) return null;
 
   const session = await decrypt(sessionCookie);
-  if (!session || typeof session.expiresAt !== "string" || isNaN(Date.parse(session.expiresAt))) {
+  if (
+    !session ||
+    typeof session.expiresAt !== "string" ||
+    isNaN(Date.parse(session.expiresAt))
+  ) {
     await deleteSession(); // Delete expired session
     return null;
   }
