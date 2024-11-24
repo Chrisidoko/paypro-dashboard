@@ -28,6 +28,13 @@ const testUsers = [
     password: "password123",
     role: "user", // Example differentiation field
   },
+  {
+    id: "4",
+    email: "user3@example.com",
+    username: "TEST",
+    password: "password123",
+    role: "user", // Example differentiation field
+  },
 ];
 
 const loginSchema = z.object({
@@ -38,7 +45,11 @@ const loginSchema = z.object({
     .trim(),
 });
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  prevState: any,
+  formData: FormData
+) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
 
   if (!result.success) {
