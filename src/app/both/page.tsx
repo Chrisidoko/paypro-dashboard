@@ -75,7 +75,7 @@ export default async function Both() {
   let transactions: Payment[];
   try {
     transactions = await fetchTransactionData();
-  } catch (error) {
+  } catch {
     transactions = []; // Use fallback data or show an error message
   }
   if (transactions.length === 0) {
