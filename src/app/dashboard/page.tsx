@@ -12,7 +12,7 @@ import {
   LucideUser2,
 } from "lucide-react";
 
-import { ChartPie } from "../mycomponents/piechart";
+// import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
 
 import Sidebar from "../mycomponents/side-nav";
@@ -56,9 +56,9 @@ export default function Dashboard() {
   //data fetching simulate to do additions
   const [totals, setTotals] = useState({ today: 0, thisWeek: 0, thisMonth: 0 });
   //data fetching for pie chart props
-  const [chartData, setChartData] = useState<
-    { browser: string; visitors: number; fill: string }[]
-  >([]);
+  // const [chartData, setChartData] = useState<
+  //   { browser: string; visitors: number; fill: string }[]
+  // >([]); // will uncoment when channels are available
   //for graph component
   const [transactionData, setTransactionData] = useState<
     { day: string; count: number }[]
@@ -95,8 +95,11 @@ export default function Dashboard() {
           //processChartData(data); // Process chart data after transactions are fetched
           processGraphData(data);
         }
-      } catch (err: any) {
-        setError(err.message || "An unexpected error occurred");
+      } catch (err: unknown) {
+        setError(
+          (err as { message?: string })?.message ||
+            "An unexpected error occurred"
+        );
       } finally {
         setLoading(false);
       }
@@ -352,7 +355,7 @@ export default function Dashboard() {
                 <Graph chartData={transactionData} />
               </div>
               <div className="p-2 w-[500px] h-[420px] bg-[#D9D9D9] rounded-md ">
-                <ChartPie chartData={chartData} />
+                {/* <ChartPie chartData={chartData} /> */}
               </div>
             </div>
           </div>
@@ -361,6 +364,6 @@ export default function Dashboard() {
     </div>
   );
 }
-function processGraphData(data: any) {
-  throw new Error("Function not implemented.");
-}
+// function processGraphData(data: any) {
+//   throw new Error("Function not implemented.");
+// }

@@ -12,44 +12,69 @@ import { Payment, columns } from "../payments/columns";
 import { DataTable } from "../payments/data-table";
 
 async function fetchTransactionData(): Promise<Payment[]> {
-  const response = await fetch(
-    "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions",
-    { cache: "no-store" } // Prevent caching, fetch fresh data
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch: ${response.statusText}`);
+  try {
+    const response = await fetch(
+      "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions",
+      { cache: "no-store" } // Prevent caching, fetch fresh data
+    );
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+    const apiResponse = await response.json();
+    const data = apiResponse?.data?.data || [];
+    return data.map(
+      (txn: any): Payment => ({
+        id: txn.id,
+        amount: txn.amount,
+        status: txn.status,
+        paymentReference: txn.paymentReference || "N/A", // Fallback if field is missing
+        createdAt: txn.createdAt,
+        updatedAt: txn.updatedAt,
+        email: txn.email || "No Email Provided",
+        paymentItem: {
+          name: txn.paymentItem?.name || "No Description",
+        },
+        student: {
+          firstName: txn.student?.firstName || "Unknown",
+          lastName: txn.student?.lastName || "Unknown",
+          studentId: txn.student?.studentId || "N/A",
+          school: {
+            name: txn.student.school?.name || "No School Name",
+          },
+        },
+      })
+    );
+  } catch (error) {
+    console.error("Error fetching transaction data:", error);
+    return []; // Return an empty array as fallback
   }
-  const apiResponse = await response.json();
-  const data = apiResponse?.data?.data || [];
-  return data.map((txn: any) => ({
-    id: txn.id,
-    amount: txn.amount,
-    status: txn.status,
-    paymentReference: txn.paymentReference || "N/A", // Fallback if field is missing
-    createdAt: txn.createdAt,
-    updatedAt: txn.updatedAt,
-    email: txn.email || "No Email Provided",
-    paymentItem: {
-      name: txn.paymentItem?.name || "No Description",
-    },
-    student: {
-      firstName: txn.student?.firstName || "Unknown",
-      lastName: txn.student?.lastName || "Unknown",
-      studentId: txn.student?.studentId || "N/A",
-      school: {
-        name: txn.student.school?.name || "No School Name",
-      },
-    },
-  }));
 }
 
 export default async function Both() {
-  const transactions = await fetchTransactionData();
-
+  let transactions: Payment[];
+  try {
+    transactions = await fetchTransactionData();
+  } catch (error) {
+    transactions = []; // Use fallback data or show an error message
+  }
+  if (transactions.length === 0) {
+    return (
+      <div style={{ display: "flex" }}>
+        <Sidebar />
+        <main style={{ marginLeft: "0px", padding: "8px", flexGrow: 1 }}>
+          <div className="w-full h-full border-2 bg-white rounded-[15px]">
+            <div className="mt-[17px] ml-[24px]">
+              <h1>No Transactions Available</h1>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
-      <main style={{ marginLeft: "0px", padding: "8px", flexGrow: 1 }}>
+      <main className="flex-grow p-4">
         <div className="w-full h-full border-2 bg-white rounded-[15px]">
           <div className="mt-[17px] ml-[24px] flex items-center gap-[23px] text-[#0C141B] text-[14px] list-none">
             <LucideArrowLeft size={16} color="#1D2529" />
