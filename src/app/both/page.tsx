@@ -20,10 +20,32 @@ async function fetchTransactionData(): Promise<Payment[]> {
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
+
+    // Define the API response structure (if it differs from `Payment`)
+    type ApiTransaction = {
+      id: number;
+      amount: number;
+      status: "pending" | "successful" | "failed";
+      paymentReference?: string;
+      createdAt: string;
+      updatedAt: string;
+      email?: string;
+      paymentItem?: {
+        name?: string;
+      };
+      student?: {
+        firstName?: string;
+        lastName?: string;
+        studentId?: string;
+        school?: {
+          name?: string;
+        };
+      };
+    };
     const apiResponse = await response.json();
-    const data = apiResponse?.data?.data || [];
+    const data: ApiTransaction[] = apiResponse?.data?.data || [];
     return data.map(
-      (txn: any): Payment => ({
+      (txn): Payment => ({
         id: txn.id,
         amount: txn.amount,
         status: txn.status,
@@ -39,14 +61,13 @@ async function fetchTransactionData(): Promise<Payment[]> {
           lastName: txn.student?.lastName || "Unknown",
           studentId: txn.student?.studentId || "N/A",
           school: {
-            name: txn.student.school?.name || "No School Name",
+            name: txn.student?.school?.name || "No School Name",
           },
         },
       })
     );
-  } catch (error) {
-    console.error("Error fetching transaction data:", error);
-    return []; // Return an empty array as fallback
+  } catch {
+    return []; /// Return an empty array as fallback
   }
 }
 
