@@ -25,260 +25,244 @@ interface User {
   role: "admin" | "user"; // Add other properties
 }
 
-// Define the transaction type
 interface Transaction {
-  id: string;
+  id: number;
   amount: number;
+  paymentReference: string;
   status: string;
-  email: string;
-  regno: string;
-  txnRef: string;
-  desc: string;
-  date: string;
-  channel: string;
-  school: string; // School associated with the transaction
+  createdAt: string;
+  updatedAt: string;
+  student: {
+    firstName: string;
+    lastName: string;
+  };
+  paymentItem: {
+    name: string;
+  };
 }
 
-async function getTransactions(): Promise<Transaction[]> {
-  // Simulate API response
-  return [
-    {
-      id: "1",
-      amount: 5000,
-      status: "success",
-      email: "a@example.com",
-      regno: "123",
-      txnRef: "txn1",
-      desc: "Fee",
-      date: "2024-11-24T12:00:00Z",
-      channel: "Bankbranch",
-      school: "COE GIDAN WAYA",
-    },
-    {
-      id: "2",
-      amount: 1000,
-      status: "success",
-      email: "b@example.com",
-      regno: "124",
-      txnRef: "txn2",
-      desc: "Fee",
-      date: "2024-11-24T12:00:00Z",
-      channel: "WebPay",
-      school: "COE GIDAN WAYA",
-    },
-    {
-      id: "3",
-      amount: 4000,
-      status: "success",
-      email: "c@example.com",
-      regno: "125",
-      txnRef: "txn3",
-      desc: "Fee",
-      date: "2024-11-15T12:00:00Z",
-      channel: "WebPay",
-      school: "COE GIDAN WAYA",
-    },
-    {
-      id: "4",
-      amount: 4000,
-      status: "success",
-      email: "c@example.com",
-      regno: "125",
-      txnRef: "txn3",
-      desc: "Fee",
-      date: "2024-11-16T12:00:00Z",
-      channel: "WebPay",
-      school: "KADUNA STATE UNIVERSITY",
-    },
-    {
-      id: "5",
-      amount: 34000,
-      status: "success",
-      email: "c@example.com",
-      regno: "125",
-      txnRef: "txn3",
-      desc: "Fee",
-      date: "2024-10-16T12:00:00Z",
-      channel: "WebPay",
-      school: "KADUNA STATE UNIVERSITY",
-    },
-    // Add more transactions
-  ];
-}
+// async function getTransactions(): Promise<Transaction[]> {
+//   // Simulate API response
+//   return [
+//     // Add more transactions
+//   ];
+// }
 
 export default function Dashboard() {
+  // States initialization
   // Initialize state with the correct type
   const [user, setUser] = useState<User | null>(null);
-  //data fetching simulate to add
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  //data fetching simulate to do additions
   const [totals, setTotals] = useState({ today: 0, thisWeek: 0, thisMonth: 0 });
   //data fetching for pie chart props
   const [chartData, setChartData] = useState<
     { browser: string; visitors: number; fill: string }[]
   >([]);
-
   //for graph component
   const [transactionData, setTransactionData] = useState<
     { day: string; count: number }[]
   >([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch user data
   useEffect(() => {
     async function fetchUser() {
-      const response = await fetch("/api/session"); // Call API route to fetch user data
+      const response = await fetch("/api/session");
       const data = await response.json();
-      setUser(data); // Set the user state
+      setUser(data);
     }
-
     fetchUser();
   }, []);
 
+  // Fetch transactions and compute totals
   useEffect(() => {
-    async function fetchAndComputeTotals() {
-      const transactions = await getTransactions();
-
-      // Get the current date and reset the time to midnight
-      const now = new Date();
-      const today = new Date(now);
-      today.setHours(0, 0, 0, 0); // Reset the time for today
-
-      // Compute the start of the week (Sunday), reset time to midnight
-      const weekStart = new Date(now);
-      weekStart.setDate(now.getDate() - now.getDay()); // Go back to Sunday
-      weekStart.setHours(0, 0, 0, 0);
-
-      // Compute the start of the month, reset time to midnight
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      monthStart.setHours(0, 0, 0, 0);
-
-      const totalToday = transactions
-        .filter((t) => {
-          const txnDate = new Date(t.date);
-          txnDate.setHours(0, 0, 0, 0); // Reset time for comparison
-          return (
-            t.status === "success" && txnDate.getTime() === today.getTime()
-          ); // Compare only the date part of today
-        })
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      const totalThisWeek = transactions
-        .filter((t) => {
-          const txnDate = new Date(t.date);
-          txnDate.setHours(0, 0, 0, 0); // Reset time for comparison
-          return (
-            t.status === "success" && txnDate >= weekStart && txnDate <= now
-          );
-        })
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      const totalThisMonth = transactions
-        .filter((t) => {
-          const txnDate = new Date(t.date);
-          txnDate.setHours(0, 0, 0, 0); // Reset time for comparison
-          return (
-            t.status === "success" && txnDate >= monthStart && txnDate <= now
-          );
-        })
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      setTotals({
-        today: totalToday,
-        thisWeek: totalThisWeek,
-        thisMonth: totalThisMonth,
-      });
+    async function fetchTransactions() {
+      setLoading(true); // Ensure loading is true when fetching starts
+      try {
+        const response = await fetch(
+          "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions"
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.statusText}`);
+        }
+        const apiResponse = await response.json();
+        const data = apiResponse?.data?.data;
+        if (data) {
+          setTransactions(data);
+          computeTotals(data); // Calculate totals after data fetch
+          //processChartData(data); // Process chart data after transactions are fetched
+          processGraphData(data);
+        }
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred");
+      } finally {
+        setLoading(false);
+      }
     }
 
-    fetchAndComputeTotals();
-  }, []);
+    fetchTransactions();
+  }, []); // Ensure it runs only once on component mount
 
-  useEffect(() => {
-    async function fetchAndProcessData() {
-      const transactions = await getTransactions();
+  // Function to compute totals for Today, This Week, and This Month
+  const computeTotals = (transactions: Transaction[]) => {
+    const now = new Date();
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
 
-      const processedData = [
-        {
-          browser: "WebPay",
-          visitors: transactions.filter(
-            (t) =>
-              t.channel === "WebPay" &&
-              new Date(t.date).getMonth() === new Date().getMonth()
-          ).length,
-          fill: "var(--color-chrome)",
-        },
-        {
-          browser: "Bankbranch",
-          visitors: transactions.filter(
-            (t) =>
-              t.channel === "Bankbranch" && // Corrected filter condition
-              new Date(t.date).getMonth() === new Date().getMonth()
-          ).length,
-          fill: "var(--color-safari)",
-        },
-      ];
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay());
+    weekStart.setHours(0, 0, 0, 0);
 
-      setChartData(processedData);
-    }
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    monthStart.setHours(0, 0, 0, 0);
 
-    fetchAndProcessData();
-  }, []);
+    const totalToday = transactions
+      .filter((t) => {
+        const txnDate = new Date(t.updatedAt);
+        txnDate.setHours(0, 0, 0, 0);
+        return (
+          t.status === "successful" && txnDate.getTime() === today.getTime()
+        );
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
 
-  useEffect(() => {
-    async function fetchData() {
-      const transactions = await getTransactions();
+    const totalThisWeek = transactions
+      .filter((t) => {
+        const txnDate = new Date(t.updatedAt);
+        txnDate.setHours(0, 0, 0, 0);
+        return (
+          t.status === "successful" && txnDate >= weekStart && txnDate <= now
+        );
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
 
-      // Get the current date and calculate the start of the week (Sunday) and end of the week (Saturday)
-      const currentDate = new Date();
-      const currentDay = currentDate.getDay();
+    const totalThisMonth = transactions
+      .filter((t) => {
+        const txnDate = new Date(t.updatedAt);
+        txnDate.setHours(0, 0, 0, 0);
+        return (
+          t.status === "successful" && txnDate >= monthStart && txnDate <= now
+        );
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
 
-      // Start of the week: set the time to 00:00:00 (midnight) on the last Sunday
-      const startOfWeek = new Date(currentDate);
-      startOfWeek.setDate(currentDate.getDate() - currentDay); // Go back to Sunday
-      startOfWeek.setHours(0, 0, 0, 0); // Set to midnight
+    setTotals({
+      today: totalToday,
+      thisWeek: totalThisWeek,
+      thisMonth: totalThisMonth,
+    });
+  };
 
-      // End of the week: set the time to 23:59:59 (one millisecond before midnight) on the Saturday
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // Move to Saturday
-      endOfWeek.setHours(23, 59, 59, 999); // Set to just before midnight
+  // Function to process chart data
+  // const processChartData = (transactions: Transaction[]) => {
+  //   const processedData = [
+  //     {
+  //       browser: "WebPay",
+  //       visitors: transactions.filter(
+  //         (t) =>
+  //           t.channel === "WebPay" &&
+  //           new Date(t.updatedAt).getMonth() === new Date().getMonth()
+  //       ).length,
+  //       fill: "var(--color-chrome)",
+  //     },
+  //     {
+  //       browser: "Bankbranch",
+  //       visitors: transactions.filter(
+  //         (t) =>
+  //           t.channel === "Bankbranch" &&
+  //           new Date(t.updatedAt).getMonth() === new Date().getMonth()
+  //       ).length,
+  //       fill: "var(--color-safari)",
+  //     },
+  //   ];
+  //   setChartData(processedData);
+  // };
 
-      // Filter transactions to include only those within the current week
-      const filteredTransactions = transactions.filter((txn) => {
-        const txnDate = new Date(txn.date);
-        return txnDate >= startOfWeek && txnDate <= endOfWeek;
-      });
+  // Function to process graph data based on the transactions already fetched
+  const processGraphData = (transactions: Transaction[]) => {
+    // Get the current date and calculate the start and end of the week
+    const currentDate = new Date();
+    const currentDay = currentDate.getDay();
 
-      // Create an array to store the count of transactions per day of the week
-      const daysOfWeek = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
-      const dailyCount = daysOfWeek.map((day) => ({
-        day,
-        count: 0,
-      }));
+    // Start of the week: set the time to 00:00:00 (midnight) on the last Sunday
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - currentDay); // Go back to Sunday
+    startOfWeek.setHours(0, 0, 0, 0); // Set to midnight
 
-      // Count the transactions per day
-      filteredTransactions.forEach((txn) => {
-        const txnDate = new Date(txn.date);
-        const dayOfWeek = txnDate.getDay(); // Get the day index (0 - 6)
-        dailyCount[dayOfWeek].count += 1;
-      });
+    // End of the week: set the time to 23:59:59 (one millisecond before midnight) on the Saturday
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Move to Saturday
+    endOfWeek.setHours(23, 59, 59, 999); // Set to just before midnight
 
-      setTransactionData(dailyCount);
-    }
+    // Filter transactions to include only those within the current week
+    const filteredTransactions = transactions.filter((txn) => {
+      const txnDate = new Date(txn.updatedAt); // Get the transaction date
+      return txnDate >= startOfWeek && txnDate <= endOfWeek; // Filter by week range
+    });
 
-    fetchData();
-  }, []);
+    // Array to store the count of transactions per day of the week
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
-  // Place the loading state handling *after* hooks
-  if (!user)
+    // Initialize dailyCount with 0 transactions for each day of the week
+    const dailyCount = daysOfWeek.map((day) => ({
+      day,
+      count: 0,
+    }));
+
+    // Count the transactions per day
+    filteredTransactions.forEach((txn) => {
+      const txnDate = new Date(txn.updatedAt); // Get the transaction date
+      const dayOfWeek = txnDate.getDay(); // Get the day index (0 - 6)
+
+      // Increment the transaction count for the corresponding day of the week
+      dailyCount[dayOfWeek].count += 1;
+    });
+
+    // Set the transaction data in the state
+    setTransactionData(dailyCount);
+  }; // Empty dependency array to run only once when the component mounts
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>Error: {error}</p>
+      </div>
+    );
+  }
+
+  if (transactions.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>No transactions found</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ display: "flex" }}>
@@ -376,4 +360,7 @@ export default function Dashboard() {
       </main>
     </div>
   );
+}
+function processGraphData(data: any) {
+  throw new Error("Function not implemented.");
 }

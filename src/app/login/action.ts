@@ -12,6 +12,7 @@ const testUsers = [
     email: "admin@example.com",
     username: "KADUNA TETIARY INSTITUTION",
     password: "12345678",
+    schoolID: "",
     role: "admin", // Example differentiation field
   },
   {
@@ -19,6 +20,7 @@ const testUsers = [
     email: "user1@example.com",
     username: "COE GIDAN WAYA",
     password: "password123",
+    schoolID: "1",
     role: "user", // Example differentiation field
   },
   {
@@ -26,13 +28,7 @@ const testUsers = [
     email: "user2@example.com",
     username: "KADUNA STATE UNIVERSITY",
     password: "password123",
-    role: "user", // Example differentiation field
-  },
-  {
-    id: "4",
-    email: "user3@example.com",
-    username: "TEST",
-    password: "password123",
+    schoolID: "2",
     role: "user", // Example differentiation field
   },
 ];

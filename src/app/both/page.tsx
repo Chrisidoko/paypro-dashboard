@@ -11,123 +11,40 @@ import Sidebar from "../mycomponents/side-nav";
 import { Payment, columns } from "../payments/columns";
 import { DataTable } from "../payments/data-table";
 
-async function getData(): Promise<Payment[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      regno: "12345678TM",
-      txnRef: "1332792739WP",
-      desc: "Registration Fee",
+async function fetchTransactionData(): Promise<Payment[]> {
+  const response = await fetch(
+    "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions",
+    { cache: "no-store" } // Prevent caching, fetch fresh data
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch: ${response.statusText}`);
+  }
+  const apiResponse = await response.json();
+  const data = apiResponse?.data?.data || [];
+  return data.map((txn: any) => ({
+    id: txn.id,
+    amount: txn.amount,
+    status: txn.status,
+    paymentReference: txn.paymentReference || "N/A", // Fallback if field is missing
+    createdAt: txn.createdAt,
+    updatedAt: txn.updatedAt,
+    email: txn.email || "No Email Provided",
+    paymentItem: {
+      name: txn.paymentItem?.name || "No Description",
     },
-    {
-      id: "728ed53f",
-      amount: 200,
-      status: "success",
-      email: "a@example.com",
-      regno: "12349678TM",
-      txnRef: "1372792739WP",
-      desc: "Acceptance Fee",
+    student: {
+      firstName: txn.student?.firstName || "Unknown",
+      lastName: txn.student?.lastName || "Unknown",
+      studentId: txn.student?.studentId || "N/A",
+      school: {
+        name: txn.student.school?.name || "No School Name",
+      },
     },
-    {
-      id: "728ed54f",
-      amount: 400,
-      status: "success",
-      email: "p@example.com",
-      regno: "12345778TM",
-      txnRef: "1372795739WP",
-      desc: "Registration Fee",
-    },
-    {
-      id: "728ed55f",
-      amount: 300,
-      status: "processing",
-      email: "q@example.com",
-      regno: "12356786MM",
-      txnRef: "1372722739WP",
-      desc: "Hostel Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 500,
-      status: "success",
-      email: "s@example.com",
-      regno: "12345678EM",
-      txnRef: "1372795739WP",
-      desc: "Registration Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    {
-      id: "728ed53f",
-      amount: 5600,
-      status: "success",
-      email: "u@example.com",
-      regno: "12345678EE",
-      txnRef: "1372746739WP",
-      desc: "Acceptance Fee",
-    },
-    // ...
-  ];
+  }));
 }
 
 export default async function Both() {
-  const data = await getData();
+  const transactions = await fetchTransactionData();
 
   return (
     <div style={{ display: "flex" }}>
@@ -169,7 +86,7 @@ export default async function Both() {
             </div> */}
 
             <div className="container mx-auto py-10">
-              <DataTable columns={columns} data={data} />
+              <DataTable columns={columns} data={transactions} />
             </div>
           </div>
         </div>

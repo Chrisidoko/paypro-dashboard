@@ -8,19 +8,31 @@ import { Button } from "@/components/ui/button";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
-  id: string;
+  id: number;
   amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+  status: "pending" | "successful" | "failed";
+  paymentReference: string;
+  createdAt: string;
+  updatedAt: string;
   email: string;
-  regno: string;
-  txnRef: string;
-  desc: string;
+  paymentItem: {
+    name: string;
+  };
+  student: {
+    firstName: string;
+    lastName: string;
+    studentId: string;
+    school: {
+      name: string;
+    };
+  };
 };
 
 export const columns: ColumnDef<Payment>[] = [
   {
-    accessorKey: "regno",
-    header: "Regno",
+    id: "studentId", // Custom ID
+    header: "Student ID",
+    accessorFn: (row) => row.student.studentId, // Extract nested property
   },
   {
     accessorKey: "status",
@@ -41,13 +53,24 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "desc",
-    header: "Desc",
+    accessorKey: "student.school.name",
+    header: "School",
   },
   {
-    accessorKey: "txnRef",
-    header: "Txn Ref",
+    accessorKey: "paymentItem.name",
+    header: "Desc",
+    cell: ({ row }) => {
+      // Safely access `paymentItem.name` or provide a fallback
+      const paymentItemName =
+        row.original.paymentItem?.name || "No Description";
+      return <span>{paymentItemName}</span>;
+    },
   },
+  {
+    accessorKey: "paymentReference",
+    header: "Payment Ref",
+  },
+
   {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,

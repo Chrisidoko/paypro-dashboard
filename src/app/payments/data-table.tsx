@@ -73,18 +73,25 @@ export function DataTable<TData, TValue>({
       <div className="flex items-center py-4 gap-6">
         <Input
           placeholder="Filter Regno..."
-          value={(table.getColumn("regno")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("studentId")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("regno")?.setFilterValue(event.target.value)
+            table.getColumn("studentId")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
 
         <Input
-          placeholder="Filter Txn Ref..."
-          value={(table.getColumn("txnRef")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Payment Ref..."
+          value={
+            (table.getColumn("paymentReference")?.getFilterValue() as string) ??
+            ""
+          }
           onChange={(event) =>
-            table.getColumn("txnRef")?.setFilterValue(event.target.value)
+            table
+              .getColumn("paymentReference")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
