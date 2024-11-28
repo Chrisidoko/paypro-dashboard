@@ -287,8 +287,8 @@ export default function Dashboard() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
-      <main style={{ marginLeft: "0px", padding: "4px", flexGrow: 1 }}>
-        <div className="bg-[#FAFBFD] w-full h-full">
+      <main style={{ marginLeft: "0px", padding: "8px", flexGrow: 1 }}>
+        <div className="border-2 bg-white rounded-lg w-full h-full">
           <div className="flex items-center justify-between">
             <div className="mt-4 ml-6 flex items-center gap-6 list-none text-[#0C141B] text-sm">
               <LucideArrowLeft size={16} color="#1D2529" />
@@ -301,7 +301,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="ml-14">
-            <div className="flex w-[773px] h-[81px] mt-12">
+            <div className="flex w-[573px] h-[81px] mt-12">
               <Image
                 src="/KD_logo.png"
                 alt="Kaduna State logo"
@@ -334,7 +334,7 @@ export default function Dashboard() {
               {["Today", "This Week", "This Month"].map((period, idx) => (
                 <div
                   key={idx}
-                  className="w-[270px] bg-white h-full p-4 border border-[#ECECEC] rounded-lg"
+                  className="w-[270px] h-full p-4 border border-[#ECECEC] rounded-lg"
                 >
                   <a className="text-sm text-[#555A5C] font-medium">{period}</a>
                   <div className="flex items-center gap-1 mt-2.5">
@@ -353,7 +353,7 @@ export default function Dashboard() {
                     </li>
                   </div>
                   <div className="flex items-center gap-1.5 mt-2">
-                    <div className="w-5 h-5 bg-transperent rounded flex items-center justify-center">
+                    <div className="w-5 h-5 bg-[#57B05D20] rounded flex items-center justify-center">
                       <LucideDatabaseBackup size={14} color="#57B05D" />
                     </div>
                     <a className="text-xs font-semibold text-[#63686A]">
@@ -368,10 +368,10 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="flex w-[100%] items-start gap-10 mt-9 mb-9 ">
-              <div className=" w-[496px] h-[410px] p-2 bg-transparent rounded-md  ">
+              <div className=" w-[496px] h-[410px] p-2 bg-[#ffffff] rounded-md  ">
                 <Graph chartData={transactionData} />
               </div>
-              <div className="p-2 w-[500px] h-[420px] bg-transparent rounded-md ">
+              <div className="p-2 w-[500px] h-[420px] bg-[#ffffff] rounded-md ">
                 {/* <ChartPie chartData={chartData} /> */}
               </div>
             </div>

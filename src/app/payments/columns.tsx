@@ -11,7 +11,7 @@ export type Payment = {
   id: number;
   amount: number;
   status: "pending" | "successful" | "failed";
-  paymentReference: string;
+  txnRef: string;
   createdAt: string;
   updatedAt: string;
   email: string;
@@ -67,8 +67,8 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "paymentReference",
-    header: "Payment Ref",
+    accessorKey: "txnRef",
+    header: "Txn Ref",
   },
 
   {

@@ -83,11 +83,8 @@ export function DataTable<TData, TValue>({
         />
 
         <Input
-          placeholder="Filter Payment Ref..."
-          value={
-            (table.getColumn("paymentReference")?.getFilterValue() as string) ??
-            ""
-          }
+          placeholder="Filter Txn Ref..."
+          value={(table.getColumn("txnRef")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table
               .getColumn("paymentReference")

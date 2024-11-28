@@ -26,7 +26,7 @@ async function fetchTransactionData(): Promise<Payment[]> {
       id: number;
       amount: number;
       status: "pending" | "successful" | "failed";
-      paymentReference?: string;
+      txnRef?: string;
       createdAt: string;
       updatedAt: string;
       email?: string;
@@ -49,7 +49,7 @@ async function fetchTransactionData(): Promise<Payment[]> {
         id: txn.id,
         amount: txn.amount,
         status: txn.status,
-        paymentReference: txn.paymentReference || "N/A", // Fallback if field is missing
+        txnRef: txn.txnRef || "N/A", // Fallback if field is missing
         createdAt: txn.createdAt,
         updatedAt: txn.updatedAt,
         email: txn.email || "No Email Provided",
@@ -95,16 +95,18 @@ export default async function Both() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
-      <main className="flex-grow p-4">
-        <div className="w-full h-full border-2 bg-white rounded-[15px]">
-          <div className="mt-[17px] ml-[24px] flex items-center gap-[23px] text-[#0C141B] text-[14px] list-none">
-            <LucideArrowLeft size={16} color="#1D2529" />
-            <div className="h-[13px] w-[2px] bg-[#D9D9D9]"></div>
-            <LucideFolderOpen size={16} color="#1D2529" />
-            <li>Project</li>
-            <LucideChevronRight size={16} color="#1D2529" />
-            <LucideLayers size={16} color="#1D2529" />
-            <li>Both</li>
+      <main className="flex-grow p-1">
+        <div className="w-full h-[100vh] bg-[#FAFBFD]">
+          <div className="flex items-center justify-between">
+            <div className="mt-[17px] ml-[24px] flex items-center gap-[23px] text-[#0C141B] text-[14px] list-none">
+              <LucideArrowLeft size={16} color="#1D2529" />
+              <div className="h-[13px] w-[2px] bg-[#D9D9D9]"></div>
+              <LucideFolderOpen size={16} color="#1D2529" />
+              <li>Project</li>
+              <LucideChevronRight size={16} color="#1D2529" />
+              <LucideLayers size={16} color="#1D2529" />
+              <li>Both</li>
+            </div>
           </div>
           <div className="ml-[56px] mr-[56px] pt-[50px]">
             <div className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl mb-[18px]">

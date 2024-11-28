@@ -11,6 +11,7 @@ type User = {
   id: string;
   email: string;
   username: string;
+  schoolID: number | null;
   role: "admin" | "user"; // Use string literals for role if it's constrained
 };
 
@@ -19,24 +20,27 @@ const testUsers: User[] = [
     id: "1",
     email: "admin@example.com",
     username: "KADUNA TETIARY INSTITUTION",
+    schoolID: null,
     role: "admin",
   },
   {
     id: "2",
-    email: "user1@example.com",
-    username: "COE GIDAN WAYA",
+    email: "moses@example.com",
+    username: "College of Midwifery Tudun Wada Kaduna",
+    schoolID: 7,
     role: "user",
   },
   {
     id: "3",
     email: "user2@example.com",
     username: "KADUNA STATE UNIVERSITY",
+    schoolID: 6,
     role: "user",
   },
 ];
 
 export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 5 * 60 * 60 * 1000);
   const session = await encrypt({ userId, expiresAt });
 
   (await cookies()).set("session", session, {

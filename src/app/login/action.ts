@@ -17,10 +17,10 @@ const testUsers = [
   },
   {
     id: "2",
-    email: "user1@example.com",
-    username: "COE GIDAN WAYA",
+    email: "moses@example.com",
+    username: "College of Midwifery Tudun Wada Kaduna",
     password: "password123",
-    schoolID: "1",
+    schoolID: 7,
     role: "user", // Example differentiation field
   },
   {
@@ -28,7 +28,7 @@ const testUsers = [
     email: "user2@example.com",
     username: "KADUNA STATE UNIVERSITY",
     password: "password123",
-    schoolID: "2",
+    schoolID: 6,
     role: "user", // Example differentiation field
   },
 ];
