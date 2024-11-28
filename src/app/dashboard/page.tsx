@@ -84,7 +84,7 @@ export default function Dashboard() {
       try {
         // Construct the base URL
         const url = new URL(
-          "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions"
+          `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
         );
 
         // Append the `school_id` parameter if provided
