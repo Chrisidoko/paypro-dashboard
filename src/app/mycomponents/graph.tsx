@@ -97,7 +97,7 @@ export function Graph({ chartData }: GraphProps) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Total Transaction Count Per Day
+          Total Transaction Per Day
         </div>
       </CardFooter>
     </Card>
