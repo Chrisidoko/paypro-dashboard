@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import {
   LucideArrowLeft,
   LucideFolderOpen,
@@ -7,91 +9,93 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../mycomponents/side-nav";
-
 import { Payment, columns } from "../payments/columns";
 import { DataTable } from "../payments/data-table";
 
-async function fetchTransactionData(): Promise<Payment[]> {
-  try {
-    const response = await fetch(
-      "https://api.kaduna.payprosolutionsltd.com/api/v1/transactions",
-      { cache: "no-store" } // Prevent caching, fetch fresh data
-    );
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.statusText}`);
-    }
+export default function Both() {
+  const [transactions, setTransactions] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    // Define the API response structure (if it differs from `Payment`)
-    type ApiTransaction = {
-      id: number;
-      amount: number;
-      status: "pending" | "successful" | "failed";
-      txnRef?: string;
-      createdAt: string;
-      updatedAt: string;
-      email?: string;
-      paymentItem?: {
-        name?: string;
-      };
-      student?: {
-        firstName?: string;
-        lastName?: string;
-        studentId?: string;
-        school?: {
-          name?: string;
-        };
-      };
-    };
-    const apiResponse = await response.json();
-    const data: ApiTransaction[] = apiResponse?.data?.data || [];
-    return data.map(
-      (txn): Payment => ({
-        id: txn.id,
-        amount: txn.amount,
-        status: txn.status,
-        txnRef: txn.txnRef || "N/A", // Fallback if field is missing
-        createdAt: txn.createdAt,
-        updatedAt: txn.updatedAt,
-        email: txn.email || "No Email Provided",
-        paymentItem: {
-          name: txn.paymentItem?.name || "No Description",
-        },
-        student: {
-          firstName: txn.student?.firstName || "Unknown",
-          lastName: txn.student?.lastName || "Unknown",
-          studentId: txn.student?.studentId || "N/A",
-          school: {
-            name: txn.student?.school?.name || "No School Name",
+  // Fetch data on the client side
+  useEffect(() => {
+    const fetchTransactionData = async () => {
+      try {
+        const response = await fetch(
+          "https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions",
+          { cache: "no-store" } // Prevent caching, fetch fresh data
+        );
+        if (!response.ok) {
+          throw new Error(`Failed to fetch: ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+
+        // Map API data to your `Payment` type
+        const data = apiResponse?.data?.data || [];
+        const formattedData: Payment[] = data.map((txn: any) => ({
+          id: txn.id,
+          amount: txn.amount,
+          status: txn.status,
+          txnRef: txn.txnRef || "N/A",
+          createdAt: txn.createdAt,
+          updatedAt: txn.updatedAt,
+          email: txn.email || "No Email Provided",
+          paymentItem: {
+            name: txn.paymentItem?.name || "No Description",
           },
-        },
-      })
-    );
-  } catch {
-    return []; /// Return an empty array as fallback
-  }
-}
+          student: {
+            firstName: txn.student?.firstName || "Unknown",
+            lastName: txn.student?.lastName || "Unknown",
+            studentId: txn.student?.studentId || "N/A",
+            school: {
+              name: txn.student?.school?.name || "No School Name",
+            },
+          },
+        }));
 
-export default async function Both() {
-  let transactions: Payment[];
-  try {
-    transactions = await fetchTransactionData();
-  } catch {
-    transactions = []; // Use fallback data or show an error message
-  }
-  if (transactions.length === 0) {
+        setTransactions(formattedData);
+        setError(null);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch transactions.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactionData();
+  }, []); // Empty dependency array to run once on mount
+
+  if (loading) {
     return (
       <div style={{ display: "flex" }}>
         <Sidebar />
         <main style={{ marginLeft: "0px", padding: "8px", flexGrow: 1 }}>
           <div className="w-full h-full border-2 bg-white rounded-[15px]">
             <div className="mt-[17px] ml-[24px]">
-              <h1>No Transactions Available</h1>
+              <h1>Loading Transactions...</h1>
             </div>
           </div>
         </main>
       </div>
     );
   }
+
+  if (error || transactions.length === 0) {
+    return (
+      <div style={{ display: "flex" }}>
+        <Sidebar />
+        <main style={{ marginLeft: "0px", padding: "8px", flexGrow: 1 }}>
+          <div className="w-full h-full border-2 bg-white rounded-[15px]">
+            <div className="mt-[17px] ml-[24px]">
+              <h1>{error || "No Transactions Available"}</h1>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
@@ -112,28 +116,7 @@ export default async function Both() {
             <div className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl mb-[18px]">
               Both Channels
             </div>
-            {/* <div className="w-[100%] h-[144px] rounded-[14px] border border-solid border-gray-300 p-[15px]">
-              <div className="flex items-center gap-[10px]">
-                <div className="pl-[20px] flex items-center gap-[30%] w-[247px] h-[49px] rounded-[8px] border border-solid border-[#E4E6E7] text-[14px] text-black">
-                  <a>--Choose School--</a>
-                  <LucideChevronDown size={20} />
-                </div>
-                <div className="pl-[20px] flex items-center gap-[30%] w-[247px] h-[49px] rounded-[8px] border border-solid border-[#E4E6E7] text-[14px] text-black">
-                  <a>--Choose Faculty--</a>
-                  <LucideChevronDown size={20} />
-                </div>
-                <div className="pl-[20px] flex items-center gap-[30%] w-[247px] h-[49px] rounded-[8px] border border-solid border-[#E4E6E7] text-[14px] text-black">
-                  <a>--Choose Dept--</a>
-                  <LucideChevronDown size={20} />
-                </div>
-                <div className="pl-[20px] flex items-center gap-[30%] w-[247px] h-[49px] rounded-[8px] border border-solid border-[#E4E6E7] text-[14px] text-black">
-                  <a>--Choose Desc--</a>
-                  <LucideChevronDown size={20} />
-                </div>
-              </div>
-            </div> */}
-
-            <div className="container mx-auto py-10">
+            <div className="container mx-auto py-2">
               <DataTable columns={columns} data={transactions} />
             </div>
           </div>

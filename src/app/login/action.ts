@@ -25,8 +25,8 @@ const testUsers = [
   },
   {
     id: "3",
-    email: "user2@example.com",
-    username: "KADUNA STATE UNIVERSITY",
+    email: "emmanuelbalison@gmail.com",
+    username: "KADUNA STATE COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN",
     password: "password123",
     schoolID: 6,
     role: "user", // Example differentiation field
