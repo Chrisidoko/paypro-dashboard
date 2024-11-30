@@ -124,6 +124,18 @@ export default function Both() {
     loadUserAndTransactions();
   }, []); // Only run once on component mount
 
+  if (!user) {
+    return (
+      <div style={{ display: "flex" }}>
+        <main style={{ padding: "8px", flexGrow: 1 }}>
+          <div className="flex item-center justify center">
+            <h1>Failed to fetch user</h1>
+          </div>
+        </main>
+      </div>
+    ); // Explicitly use `user` here
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">

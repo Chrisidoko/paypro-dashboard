@@ -14,7 +14,6 @@ import {
 
 // import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
-import { Payment } from "../payments/columns";
 
 // Define the User type
 interface User {
