@@ -3,12 +3,12 @@ import localFont from "next/font/local";
 import "./globals.css";
 import PersistentLayout from "./PersistentLayout";
 
-import { Poppins } from "@next/font/google";
+import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
-  subsets: ["latin"], // Add "latin-ext" if needed
-  weight: ["400", "500", "600", "700"], // Select the desired weights
-  variable: "--font-poppins", // Set a CSS variable for easier use
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"], // Specify the weights you need
+  variable: "--font-poppins", // Optional: Define a custom CSS variable for the font
 });
 
 const geistSans = localFont({

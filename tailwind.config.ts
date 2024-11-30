@@ -11,7 +11,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Poppins", ...fontFamily.sans], // Add Poppins as the default sans-serif font
+        sans: ["var(--font-poppins)", ...fontFamily.sans], // Add Poppins as the default sans-serif font
       },
 
       colors: {

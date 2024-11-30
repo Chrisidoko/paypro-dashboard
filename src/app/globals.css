@@ -69,10 +69,6 @@ body {
   }
   body {
     @apply bg-background text-foreground;
-    @apply bg-background text-foreground font-sans; /* Use Tailwind's font-sans class */
-
-    .dark body {
-      @apply bg-background text-foreground; /* Ensure proper theming for dark mode */
-    }
+    @apply font-sans; /* Use Tailwind's font-sans class */
   }
 }

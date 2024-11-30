@@ -8,36 +8,40 @@ export function LoginForm() {
   const [state, loginAction] = useActionState(login, undefined);
 
   return (
-    <form
-      action={loginAction}
-      className="flex flex-col w-96 bg-white p-8 rounded-xl shadow-md space-y-4"
-    >
-      <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-sm font-semibold text-gray-700">
+    <form action={loginAction} className="flex flex-col m-6 w-96 ">
+      <div className="flex flex-col mb-10">
+        <span className="mb-3 text-3xl font-bold text-[#151D48]">
+          School Admin
+        </span>
+        <span className="font-light text-gray-400 mb-0.5 text-sm">
+          Welcome back! Please enter your details
+        </span>
+      </div>
+
+      <div className="py-4">
+        <label htmlFor="email" className="mb-2 text-sm text-[#737791]">
           Email
         </label>
         <input
           id="email"
           name="email"
           type="email"
-          placeholder="Enter your email"
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-100 rounded-md placeholder:font-light placeholder:text-gray-500"
         />
         {state?.errors?.email && (
           <p className="text-red-500 text-sm">{state.errors.email}</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="password" className="text-sm font-semibold text-gray-700">
+      <div className="py-4">
+        <label htmlFor="password" className="mb-2 text-sm text-[#737791]">
           Password
         </label>
         <input
           id="password"
           name="password"
           type="password"
-          placeholder="Enter your password"
-          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border border-gray-100 rounded-md placeholder:font-light placeholder:text-gray-500"
         />
         {state?.errors?.password && (
           <p className="text-red-500 text-sm">{state.errors.password}</p>
@@ -56,7 +60,7 @@ function SubmitButton() {
     <button
       disabled={pending}
       type="submit"
-      className="w-full py-3 bg-[#e76e50] text-white font-semibold rounded-md hover:bg-blue-600 disabled:bg-gray-300"
+      className="w-full py-3 bg-[#D33833] mt-8 text-white p-2 rounded-lg mb-2 hover:bg-white hover:text-black hover:border hover:border-gray-300 disabled:bg-gray-300"
     >
       {pending ? "Loading..." : "Login"}
     </button>

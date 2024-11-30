@@ -2,11 +2,45 @@ import { LoginForm } from "./LoginForm";
 
 export default function Login() {
   return (
-
-      <div className="flex flex-col items-center mt-24 gap-5 ">
-        <div className="text-3xl font-semibold">Admin Dashboard </div>
-      <LoginForm />
+    <div className="min-h-screen">
+      <div className="relative flex gap-2 items-center p-6">
+        {" "}
+        <img
+          src="KD_logo.png"
+          alt="Kaduna state"
+          className="w-[66px]  md:block object-cover"
+        />
+        <div className="flex flex-col">
+          <span className="text-[#151D48] font-bold ">
+            Tertiary Institution
+          </span>
+          <span className="text-[#D33833] font-bold ">Dasboard</span>
+        </div>
       </div>
-
+      <div className="flex items-center justify-center ">
+        <div className="relative flex m-6 space-y-8 bg-white shadow-2xl rounded-xl md: flex-row md:space-y-0">
+          <LoginForm />
+          <div className="relative">
+            <img
+              src="Kaj_1.jpg"
+              alt="Kaduna state"
+              className="w-[340px] h-full hidden rounded  md:block object-cover"
+            />
+            {/* text on image */}
+            <div
+              className="absolute hidden bottom-10 right-7 p-6 bg-white
+        bg-opacity-15 backdrop-blur-sm rounded-xl drop-shadow-lg md:block"
+            >
+              <span className="text-white text-sm">
+                Comprehensive view
+                <br /> of all financial transactions
+                <br />
+                within school
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

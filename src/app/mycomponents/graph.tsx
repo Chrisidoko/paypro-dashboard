@@ -56,9 +56,10 @@ export function Graph({ chartData }: GraphProps) {
             accessibilityLayer
             data={chartData}
             margin={{
-              top: 20,
+              top: 24,
               left: 12,
               right: 12,
+              bottom: 12,
             }}
           >
             <CartesianGrid vertical={false} />

@@ -128,7 +128,17 @@ export default function Both() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+        <div className="relative">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+
+          <img
+            src="/KD_logo.png"
+            alt="Kaduna State logo"
+            width={61}
+            height={61}
+            className="absolute inset-0 m-auto" // Adjust size as needed
+          />
+        </div>
       </div>
     );
   }
@@ -179,7 +189,7 @@ export default function Both() {
             </div>
           </div>
           <div className="ml-[56px] mr-[56px] pt-[50px]">
-            <div className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl mb-[18px]">
+            <div className="scroll-m-20 text-4xl text-[#151D48] font-extrabold tracking-tight lg:text-4xl mb-[18px]">
               Transaction History
             </div>
             <DataTable columns={columns} data={transactions} />

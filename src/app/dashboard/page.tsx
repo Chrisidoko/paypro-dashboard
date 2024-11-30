@@ -274,7 +274,17 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+        <div className="relative">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+
+          <img
+            src="/KD_logo.png"
+            alt="Kaduna State logo"
+            width={61}
+            height={61}
+            className="absolute inset-0 m-auto" // Adjust size as needed
+          />
+        </div>
       </div>
     );
   }
@@ -298,7 +308,17 @@ export default function Dashboard() {
   if (!user) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+        <div className="relative">
+          <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+
+          <img
+            src="/KD_logo.png"
+            alt="Kaduna State logo"
+            width={61}
+            height={61}
+            className="absolute inset-0 m-auto" // Adjust size as needed
+          />
+        </div>
       </div>
     );
   }
@@ -327,7 +347,7 @@ export default function Dashboard() {
                 height={81}
               />
               <div className="ml-5 flex flex-col">
-                <a className="text-[24px] text-[#262D34] font-semibold mb-1">
+                <a className="text-[24px] text-[#151D48] font-semibold mb-1">
                   {user.username}
                 </a>
                 <div className="flex items-center gap-2.5">
@@ -336,8 +356,8 @@ export default function Dashboard() {
                     <li className="list-none text-sm">Live</li>
                   </div>
                   <div className="flex items-center  justify-start gap-3 px-1 h-[29px] w-[153px] text-[#262D34] text-sm border border-[#E3E3E3] rounded-[14.5px]">
-                    <div className="flex items-center justify-center text-[#63686A] w-[21px] h-[21px] bg-[#D9D9D9] rounded-full">
-                      <LucideUser2 size={15} />
+                    <div className="flex items-center justify-center text-[#63686A] w-[21px] h-[21px] bg-[#FFF4DE] rounded-full">
+                      <LucideUser2 color="#FF947A" size={15} />
                     </div>
                     School Admin
                   </div>
@@ -374,7 +394,7 @@ export default function Dashboard() {
                     <div className="w-5 h-5 bg-transperent rounded flex items-center justify-center">
                       <LucideDatabaseBackup size={14} color="#57B05D" />
                     </div>
-                    <a className="text-xs font-semibold text-[#63686A]">
+                    <a className="text-xs font-medium text-[#7B91B0]">
                       {idx === 0
                         ? "Within the last 24 hours"
                         : idx === 1
