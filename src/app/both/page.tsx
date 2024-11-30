@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   LucideArrowLeft,
   LucideFolderOpen,
@@ -8,7 +9,6 @@ import {
   LucideLayers,
 } from "lucide-react";
 
-import Sidebar from "../mycomponents/side-nav";
 import { Payment, columns } from "../payments/columns";
 import { DataTable } from "../payments/data-table";
 
@@ -26,9 +26,9 @@ export default function Both() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [totalPages, setTotalPages] = useState(1); // Track total pages
-  const transactionsPerPage = 10; // Number of transactions per page
+  // const [currentPage, setCurrentPage] = useState(1); // Track current page
+  // const [totalPages, setTotalPages] = useState(1); // Track total pages
+  // const transactionsPerPage = 10; // Number of transactions per page
 
   const fetchAllTransactions = async (
     schoolId: number | null = null
@@ -131,7 +131,7 @@ export default function Both() {
         <div className="relative">
           <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
 
-          <img
+          <Image
             src="/KD_logo.png"
             alt="Kaduna State logo"
             width={61}
@@ -146,8 +146,7 @@ export default function Both() {
   if (error) {
     return (
       <div style={{ display: "flex" }}>
-        <Sidebar />
-        <main style={{ marginLeft: "200px", padding: "8px", flexGrow: 1 }}>
+        <main style={{ padding: "8px", flexGrow: 1 }}>
           <div className="w-full h-full border-2 bg-white rounded-[15px]">
             <div className="mt-[17px] ml-[24px]">
               <h1 className="text-red-500">{error}</h1>
@@ -161,8 +160,7 @@ export default function Both() {
   if (transactions.length === 0) {
     return (
       <div style={{ display: "flex" }}>
-        <Sidebar />
-        <main style={{ marginLeft: "200px", padding: "8px", flexGrow: 1 }}>
+        <main style={{ padding: "8px", flexGrow: 1 }}>
           <div className="w-full h-full border-2 bg-white rounded-[15px]">
             <div className="mt-[17px] ml-[24px]">
               <h1>No Transactions Available</h1>

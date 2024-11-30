@@ -15,8 +15,6 @@ import {
 // import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
 
-import Sidebar from "../mycomponents/side-nav";
-
 // Define the User type
 interface User {
   id: string;
@@ -277,7 +275,7 @@ export default function Dashboard() {
         <div className="relative">
           <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
 
-          <img
+          <Image
             src="/KD_logo.png"
             alt="Kaduna State logo"
             width={61}
@@ -311,7 +309,7 @@ export default function Dashboard() {
         <div className="relative">
           <div className="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
 
-          <img
+          <Image
             src="/KD_logo.png"
             alt="Kaduna State logo"
             width={61}

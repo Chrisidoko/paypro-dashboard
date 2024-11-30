@@ -1,11 +1,12 @@
 import { LoginForm } from "./LoginForm";
+import Image from "next/image";
 
 export default function Login() {
   return (
     <div className="min-h-screen">
       <div className="relative flex gap-2 items-center p-6">
         {" "}
-        <img
+        <Image
           src="KD_logo.png"
           alt="Kaduna state"
           className="w-[66px]  md:block object-cover"
@@ -21,7 +22,7 @@ export default function Login() {
         <div className="relative flex m-6 space-y-8 bg-white shadow-2xl rounded-xl md: flex-row md:space-y-0">
           <LoginForm />
           <div className="relative">
-            <img
+            <Image
               src="Kaj_1.jpg"
               alt="Kaduna state"
               className="w-[340px] h-full hidden rounded  md:block object-cover"
