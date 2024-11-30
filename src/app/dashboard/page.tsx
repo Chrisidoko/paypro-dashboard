@@ -14,6 +14,7 @@ import {
 
 // import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
+import { Payment } from "../payments/columns";
 
 // Define the User type
 interface User {
@@ -79,7 +80,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchAllTransactions(schoolId: number | null = null) {
       setLoading(true); // Ensure loading is true when fetching starts
-      let allTransactions: any[] = [];
+      let allTransactions: Transaction[] = [];
       let currentPage = 1;
       let totalPages = 1;
 

@@ -58,14 +58,13 @@ export default function Both() {
         const apiResponse = await response.json();
         const { data, meta } = apiResponse.data;
 
-        const formattedData: Payment[] = data.map((txn: any) => ({
+        const formattedData: Payment[] = data.map((txn: Payment) => ({
           id: txn.id,
           amount: txn.amount,
           status: txn.status,
           txnRef: txn.txnRef || "N/A",
           createdAt: txn.createdAt,
           updatedAt: txn.updatedAt,
-          email: txn.email || "No Email Provided",
           paymentItem: {
             name: txn.paymentItem?.name || "No Description",
           },

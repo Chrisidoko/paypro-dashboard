@@ -7,9 +7,11 @@ export default function Login() {
       <div className="relative flex gap-2 items-center p-6">
         {" "}
         <Image
-          src="KD_logo.png"
+          src="/KD_logo.png"
           alt="Kaduna state"
-          className="w-[66px]  md:block object-cover"
+          width={66}
+          height={66}
+          className="  md:block object-cover"
         />
         <div className="flex flex-col">
           <span className="text-[#151D48] font-bold ">
@@ -23,9 +25,11 @@ export default function Login() {
           <LoginForm />
           <div className="relative">
             <Image
-              src="Kaj_1.jpg"
+              src="/Kaj_1.jpg"
               alt="Kaduna state"
-              className="w-[340px] h-full hidden rounded  md:block object-cover"
+              width={349}
+              height={410}
+              className="h-full hidden rounded  md:block object-cover"
             />
             {/* text on image */}
             <div

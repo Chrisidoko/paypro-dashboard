@@ -13,28 +13,63 @@ import {
 
 import { LucideMoreHorizontal } from "lucide-react";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
+export interface Payment {
   id: number;
   amount: number;
-  status: "pending" | "successful" | "failed";
-  txnRef: string;
+  paymentReference: string;
+  status: "pending" | "completed" | "failed"; // Adjust based on possible values
   createdAt: string;
   updatedAt: string;
-  email: string;
+  studentId: number;
+  txnRef: string;
+  paymentItemId: number;
   paymentItem: {
+    id: number;
     name: string;
+    schoolId: number;
+    schoolRevenueId: number;
+    amount: string;
+    description: string;
+    status: "active" | "inactive"; // Adjust based on possible values
+    createdAt: string;
+    updatedAt: string;
+    paymentItemId: string;
   };
   student: {
+    id: number;
+    studentId: string;
+    schoolId: number;
     firstName: string;
     lastName: string;
-    studentId: string;
+    email: string;
+    phoneNumber: string;
+    createdAt: string;
+    updatedAt: string;
     school: {
+      id: number;
+      schoolId: string;
       name: string;
+      schoolEmail: string;
+      schoolPhone: string;
+      schoolAddress: string;
+      lgaId: number;
+      tin: string;
+      contactAdminPhone: string;
+      contactAdminFirstName: string;
+      contactAdminLastName: string;
+      contactAdminEmail: string;
+      contactAdminAddress: string;
+      rcNumber: string;
+      industryId: string;
+      tpui: string;
+      contactGender: "male" | "female"; // Adjust based on possible values
+      password: string;
+      createdAt: string;
+      updatedAt: string;
+      noOfStaffs: number;
     };
   };
-};
+}
 
 export const columns: ColumnDef<Payment>[] = [
   {
