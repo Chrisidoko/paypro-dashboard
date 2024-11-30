@@ -48,7 +48,7 @@ interface Transaction {
 //     // Add more transactions
 //   ];
 // }
-
+//processChartData(data); // Process chart data after transactions are fetched
 export default function Dashboard() {
   // States initialization
   // Initialize state with the correct type
@@ -79,47 +79,66 @@ export default function Dashboard() {
 
   // Fetch transactions and compute totals
   useEffect(() => {
-    async function fetchTransactions(schoolId: number | null = null) {
+    async function fetchAllTransactions(schoolId: number | null = null) {
       setLoading(true); // Ensure loading is true when fetching starts
+      let allTransactions: any[] = [];
+      let currentPage = 1;
+      let totalPages = 1;
+
       try {
-        // Construct the base URL
-        const url = new URL(
-          `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
-        );
+        while (currentPage <= totalPages) {
+          // Construct the base URL
+          const url = new URL(
+            `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
+          );
 
-        // Append the `school_id` parameter if provided
-        if (schoolId !== null) {
-          url.searchParams.append("school_id", schoolId.toString());
+          // Append the `school_id` parameter if provided
+          if (schoolId !== null) {
+            url.searchParams.append("school_id", schoolId.toString());
+          }
+
+          // Append pagination
+          url.searchParams.append("page", currentPage.toString());
+
+          const response = await fetch(url.toString());
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.statusText}`);
+          }
+
+          const apiResponse = await response.json();
+          const { data, meta } = apiResponse?.data;
+
+          // Add current page transactions to the list
+          if (data) {
+            allTransactions = allTransactions.concat(data);
+          }
+
+          // Update pagination info
+          currentPage = meta.currentPage + 1;
+          totalPages = meta.lastPage;
         }
 
-        const response = await fetch(url.toString());
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.statusText}`);
-        }
-        const apiResponse = await response.json();
-        const data = apiResponse?.data?.data;
-        if (data) {
-          setTransactions(data);
-          computeTotals(data); // Calculate totals after data fetch
-          //processChartData(data); // Process chart data after transactions are fetched
-          processGraphData(data);
-        }
+        // Update state after all data is fetched
+        setTransactions(allTransactions);
+        computeTotals(allTransactions); // Calculate totals after all data is fetched
+        //processChartData(data); // Process chart data after transactions are fetched
+        processGraphData(allTransactions); // Process graph data
       } catch (err: unknown) {
         setError(
           (err as { message?: string })?.message ||
             "An unexpected error occurred"
         );
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading spinner
       }
     }
 
     if (user) {
       // Fetch transactions based on the user's school ID
-      fetchTransactions(user.schoolID);
+      fetchAllTransactions(user.schoolID);
     }
-  }, [user]); // Ensure it runs only once on component mount
+  }, [user]);
 
   // Function to compute totals for Today, This Week, and This Month
   const computeTotals = (transactions: Transaction[]) => {
@@ -286,9 +305,8 @@ export default function Dashboard() {
 
   return (
     <div style={{ display: "flex" }}>
-      <Sidebar />
-      <main style={{ marginLeft: "0px", padding: "4px", flexGrow: 1 }}>
-        <div className="bg-[#FAFBFD] w-full h-full">
+      <main style={{ padding: "4px", flexGrow: 1 }}>
+        <div className="bg-[#FAFBFD] w-full h-full transition-all duration-300">
           <div className="flex items-center justify-between">
             <div className="mt-4 ml-6 flex items-center gap-6 list-none text-[#0C141B] text-sm">
               <LucideArrowLeft size={16} color="#1D2529" />
@@ -309,11 +327,11 @@ export default function Dashboard() {
                 height={81}
               />
               <div className="ml-5 flex flex-col">
-                <a className="text-[30px] text-[#262D34] font-semibold mb-1">
+                <a className="text-[24px] text-[#262D34] font-semibold mb-1">
                   {user.username}
                 </a>
                 <div className="flex items-center gap-2.5">
-                  <div className="flex items-center gap-3.5 p-1.5 text-[#57B05D] h-[29px] w-[97px] bg-[#57B05D20] border border-[#57B05D] rounded-[14.5px]">
+                  <div className="flex items-center gap-3.5 p-1.5 text-[#57B05D] h-[28px] w-[97px] bg-[#57B05D20] border border-[#57B05D] rounded-[14.5px]">
                     <LucideAward size={15} />
                     <li className="list-none text-sm">Live</li>
                   </div>

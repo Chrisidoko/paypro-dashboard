@@ -17,6 +17,14 @@ const testUsers = [
   },
   {
     id: "2",
+    email: "kabirkubau@admin",
+    username: "KADUNA TETIARY INSTITUTION",
+    password: "kabirkubau@admin",
+    schoolID: "",
+    role: "admin", // Example differentiation field
+  },
+  {
+    id: "3",
     email: "moses@example.com",
     username: "College of Midwifery Tudun Wada Kaduna",
     password: "password123",
@@ -24,11 +32,11 @@ const testUsers = [
     role: "user", // Example differentiation field
   },
   {
-    id: "3",
+    id: "4",
     email: "emmanuelbalison@gmail.com",
-    username: "KADUNA STATE COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN",
+    username: "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN",
     password: "password123",
-    schoolID: 6,
+    schoolID: 8,
     role: "user", // Example differentiation field
   },
 ];

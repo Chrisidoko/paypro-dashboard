@@ -4,6 +4,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { LucideMoreHorizontal } from "lucide-react";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -35,26 +43,42 @@ export const columns: ColumnDef<Payment>[] = [
     accessorFn: (row) => row.student.studentId, // Extract nested property
   },
   {
+    id: "name", // Custom ID
+    header: "Name",
+    accessorFn: (row) => `${row.student.firstName} ${row.student.lastName}`, // Combine first and last name
+  },
+
+  {
     accessorKey: "status",
     header: "Status",
   },
+  // {
+  //   accessorKey: "email",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Email
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
-    accessorKey: "email",
+    accessorKey: "student.school.name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          School
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "student.school.name",
-    header: "School",
   },
   {
     accessorKey: "paymentItem.name",
@@ -69,6 +93,18 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "txnRef",
     header: "Txn Ref",
+    cell: ({ row }) => (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <LucideMoreHorizontal size={16} />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{row.original.txnRef}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    ),
   },
 
   {

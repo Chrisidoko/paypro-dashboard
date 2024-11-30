@@ -9,12 +9,12 @@ import {
 
 import Sidebar from "../mycomponents/side-nav";
 
-export default function BankBranch() {
+export default async function BankBranch() {
   return (
     <div style={{ display: "flex" }}>
       <Sidebar />
-      <main style={{ padding: "4px", flexGrow: 1 }}>
-        <div className="w-full h-[100vh] bg-[#FAFBFD]">
+      <main style={{ marginLeft: "200px", padding: "4px", flexGrow: 1 }}>
+        <div className="w-full h-[100vh] relative bg-[#FAFBFD]">
           <div className="flex items-center justify-between">
             <div className="mt-[17px] ml-[24px] flex items-center gap-[23px] text-[#0C141B] text-[14px] list-none">
               <LucideArrowLeft size={16} />

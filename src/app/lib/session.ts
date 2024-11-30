@@ -25,16 +25,23 @@ const testUsers: User[] = [
   },
   {
     id: "2",
+    email: "kabirkubau@admin",
+    username: "KADUNA TETIARY INSTITUTION",
+    schoolID: null,
+    role: "admin",
+  },
+  {
+    id: "3",
     email: "moses@example.com",
     username: "College of Midwifery Tudun Wada Kaduna",
     schoolID: 7,
     role: "user",
   },
   {
-    id: "3",
-    email: "user2@example.com",
-    username: "KADUNA STATE UNIVERSITY",
-    schoolID: 6,
+    id: "4",
+    email: "emmanuelbalison@gmail.com",
+    username: "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN",
+    schoolID: 8,
     role: "user",
   },
 ];
