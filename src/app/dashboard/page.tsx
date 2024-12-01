@@ -53,7 +53,12 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   //data fetching simulate to do additions
-  const [totals, setTotals] = useState({ today: 0, thisWeek: 0, thisMonth: 0 });
+  const [totals, setTotals] = useState({
+    today: 0,
+    thisWeek: 0,
+    thisMonth: 0,
+    thisYear: 0,
+  });
   //data fetching for pie chart props
   // const [chartData, setChartData] = useState<
   //   { browser: string; visitors: number; fill: string }[]
@@ -151,6 +156,9 @@ export default function Dashboard() {
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     monthStart.setHours(0, 0, 0, 0);
 
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    yearStart.setHours(0, 0, 0, 0);
+
     const totalToday = transactions
       .filter((t) => {
         const txnDate = new Date(t.updatedAt);
@@ -181,10 +189,21 @@ export default function Dashboard() {
       })
       .reduce((sum, t) => sum + t.amount, 0);
 
+    const totalThisYear = transactions
+      .filter((t) => {
+        const txnDate = new Date(t.updatedAt);
+        txnDate.setHours(0, 0, 0, 0);
+        return (
+          t.status === "successful" && txnDate >= yearStart && txnDate <= now
+        );
+      })
+      .reduce((sum, t) => sum + t.amount, 0);
+
     setTotals({
       today: totalToday,
       thisWeek: totalThisWeek,
       thisMonth: totalThisMonth,
+      thisYear: totalThisYear,
     });
   };
 
@@ -367,41 +386,49 @@ export default function Dashboard() {
             </div>
             <div className="bg-[#E3E3E3] h-[1px] w-[94%] mt-7 mb-6"></div>
             <div className="flex items-center gap-5 h-[125px]">
-              {["Today", "This Week", "This Month"].map((period, idx) => (
-                <div
-                  key={idx}
-                  className="w-[270px] bg-white h-full p-4 border border-[#ECECEC] rounded-lg"
-                >
-                  <a className="text-sm text-[#555A5C] font-medium">{period}</a>
-                  <div className="flex items-center gap-1 mt-2.5">
-                    <Image
-                      src="/naira.svg"
-                      alt="Naira"
-                      width={17.5}
-                      height={18.68}
-                    />
-                    <li className="text-[24px] font-bold text-[#1C2529] list-none">
-                      {idx === 0
-                        ? totals.today.toLocaleString()
-                        : idx === 1
-                        ? totals.thisWeek.toLocaleString()
-                        : totals.thisMonth.toLocaleString()}
-                    </li>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <div className="w-5 h-5 bg-transperent rounded flex items-center justify-center">
-                      <LucideDatabaseBackup size={14} color="#57B05D" />
-                    </div>
-                    <a className="text-xs font-medium text-[#7B91B0]">
-                      {idx === 0
-                        ? "Within the last 24 hours"
-                        : idx === 1
-                        ? "From the first day of this week"
-                        : "Sum total for this month"}
+              {["Today", "This Week", "This Month", "This Year"].map(
+                (period, idx) => (
+                  <div
+                    key={idx}
+                    className="w-[270px] bg-white h-full p-4 border border-[#ECECEC] rounded-lg"
+                  >
+                    <a className="text-sm text-[#555A5C] font-medium">
+                      {period}
                     </a>
+                    <div className="flex items-center gap-1 mt-2.5">
+                      <Image
+                        src="/naira.svg"
+                        alt="Naira"
+                        width={17.5}
+                        height={18.68}
+                      />
+                      <li className="text-[24px] font-bold text-[#1C2529] list-none">
+                        {idx === 0
+                          ? totals.today.toLocaleString()
+                          : idx === 1
+                          ? totals.thisWeek.toLocaleString()
+                          : idx === 2
+                          ? totals.thisMonth.toLocaleString()
+                          : totals.thisYear.toLocaleString()}
+                      </li>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <div className="w-5 h-5 bg-transperent rounded flex items-center justify-center">
+                        <LucideDatabaseBackup size={14} color="#57B05D" />
+                      </div>
+                      <a className="text-xs font-medium text-[#7B91B0]">
+                        {idx === 0
+                          ? "Within the last 24 hours"
+                          : idx === 1
+                          ? "From the first day of this week"
+                          : idx === 2
+                          ? "Sum total for this month"
+                          : "Sum for the year"}
+                      </a>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              )}
             </div>
             <div className="flex w-[100%] items-start gap-10 mt-9 mb-9 ">
               <div className=" w-[496px] h-[410px] p-2 bg-transparent rounded-md  ">
