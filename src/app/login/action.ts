@@ -19,7 +19,7 @@ const testUsers = [
     id: "2",
     email: "admin@kadirs.com",
     username: "KADUNA TETIARY INSTITUTION",
-    password: "kabirkubau@admin",
+    password: "admin@kadirs.com",
     schoolID: "",
     role: "admin", // Example differentiation field
   },
