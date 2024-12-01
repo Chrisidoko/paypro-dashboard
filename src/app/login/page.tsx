@@ -23,20 +23,22 @@ export default function Login() {
       <div className="flex items-center justify-center ">
         <div className="relative flex m-6 space-y-8 bg-white shadow-2xl rounded-xl md: flex-row md:space-y-0">
           <LoginForm />
-          <div className="relative">
+          <div className="relative flex flex-col items-center gap-[3px] bg-[#F3F3F3] w-[350px] h-[444px]">
+            {/* <div className="flex items-center "> */}
             <Image
-              src="/Kaj_1.jpg"
+              src="/kadirs.png"
               alt="Kaduna state"
-              width={349}
+              width={249}
               height={410}
-              className="h-full hidden rounded  md:block object-cover"
+              className="h-full hidden rounded md:block object-contain "
             />
+            {/* </div> */}
             {/* text on image */}
             <div
-              className="absolute hidden bottom-10 right-7 p-6 bg-white
+              className=" bottom-0  p-6 bg-white
         bg-opacity-15 backdrop-blur-sm rounded-xl drop-shadow-lg md:block"
             >
-              <span className="text-white text-md">
+              <span className="text-[#151D48] text-md">
                 Kaduna state tertiary <br /> institutions Revenue Collection{" "}
                 <br />
                 Analysis
