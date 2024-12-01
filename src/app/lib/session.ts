@@ -32,7 +32,7 @@ const testUsers: User[] = [
   },
   {
     id: "3",
-    email: "moses@example.com",
+    email: "admin@cnmtw.com",
     username: "College of Midwifery Tudun Wada Kaduna",
     schoolID: 7,
     role: "user",

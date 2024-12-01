@@ -25,7 +25,7 @@ const testUsers = [
   },
   {
     id: "3",
-    email: "moses@example.com",
+    email: "admin@cnmtw.com",
     username: "College of Midwifery Tudun Wada Kaduna",
     password: "password123",
     schoolID: 7,
