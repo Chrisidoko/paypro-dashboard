@@ -36,11 +36,10 @@ export default function Login() {
               className="absolute hidden bottom-10 right-7 p-6 bg-white
         bg-opacity-15 backdrop-blur-sm rounded-xl drop-shadow-lg md:block"
             >
-              <span className="text-white text-sm">
-                Comprehensive view
-                <br /> of all financial transactions
+              <span className="text-white text-md">
+                Kaduna state tertiary <br /> institutions Revenue Collection{" "}
                 <br />
-                within school
+                Analysis
               </span>
             </div>
           </div>
