@@ -17,7 +17,7 @@ const testUsers = [
   },
   {
     id: "2",
-    email: "kabirkubau@admin",
+    email: "admin@kadirs.com",
     username: "KADUNA TETIARY INSTITUTION",
     password: "kabirkubau@admin",
     schoolID: "",

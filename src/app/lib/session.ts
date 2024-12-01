@@ -25,7 +25,7 @@ const testUsers: User[] = [
   },
   {
     id: "2",
-    email: "kabirkubau@admin",
+    email: "admin@kadirs.com",
     username: "KADUNA TETIARY INSTITUTION",
     schoolID: null,
     role: "admin",
