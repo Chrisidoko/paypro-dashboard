@@ -44,7 +44,8 @@ export default function Both() {
           `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
         );
 
-        if (schoolId !== null) {
+        // Append the `school_id` only if it's not null
+        if (schoolId) {
           apiUrl.searchParams.append("school_id", schoolId.toString());
         }
 
@@ -105,14 +106,10 @@ export default function Both() {
         setUser(userData);
 
         // Fetch transactions for the user's school
-        if (userData?.schoolID !== null) {
-          const schoolTransactions = await fetchAllTransactions(
-            userData.schoolID
-          );
-          setTransactions(schoolTransactions);
-        } else {
-          setTransactions([]);
-        }
+        const schoolTransactions = await fetchAllTransactions(
+          userData.schoolID
+        );
+        setTransactions(schoolTransactions);
       } catch (err: unknown) {
         setError(
           (err as { message?: string })?.message || "Failed to load data"
@@ -169,19 +166,19 @@ export default function Both() {
     );
   }
 
-  if (transactions.length === 0) {
-    return (
-      <div style={{ display: "flex" }}>
-        <main style={{ padding: "8px", flexGrow: 1 }}>
-          <div className="w-full h-full border-2 bg-white rounded-[15px]">
-            <div className="mt-[17px] ml-[24px]">
-              <h1>No Transactions Available</h1>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  // if (transactions.length === 0) {
+  //   return (
+  //     <div style={{ display: "flex" }}>
+  //       <main style={{ padding: "8px", flexGrow: 1 }}>
+  //         <div className="w-full h-full border-2 bg-white rounded-[15px]">
+  //           <div className="mt-[17px] ml-[24px]">
+  //             <h1>No Transactions Available</h1>
+  //           </div>
+  //         </div>
+  //       </main>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div style={{ display: "flex" }}>
