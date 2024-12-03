@@ -166,7 +166,11 @@ const Institutions = () => {
               {Object.entries(totalsBySchool).map(([schoolId, totals]) => (
                 <div key={schoolId} className="flex flex-col mt-[40px]">
                   <span className="text-[#D33833] mb-[30px] text-lg">
-                    School ID: {schoolId}
+                    {Number(schoolId) === 7
+                      ? "College of Midwifery Tudun Wada Kaduna"
+                      : Number(schoolId)
+                      ? "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN"
+                      : `School ID: ${schoolId}`}
                   </span>
 
                   <div className="flex items-center gap-5 h-[125px]">
