@@ -12,8 +12,9 @@ import {
   LucideUser2,
 } from "lucide-react";
 
-// import { ChartPie } from "../mycomponents/piechart";
+import { ChartPie } from "../mycomponents/piechart";
 import { Graph } from "../mycomponents/graph";
+//import { RadialChart } from "../mycomponents/radialchart";
 
 // Define the User type
 interface User {
@@ -26,17 +27,40 @@ interface User {
 
 interface Transaction {
   id: number;
-  amount: number;
-  paymentReference: string;
+  transactionId: number;
+  paymentRef: string;
+  amount: string;
   status: string;
+  paymentChannel: string;
+  date: string;
   createdAt: string;
   updatedAt: string;
-  student: {
-    firstName: string;
-    lastName: string;
-  };
-  paymentItem: {
-    name: string;
+  transaction: {
+    id: number;
+    amount: number;
+    paymentReference: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    student: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      school: {
+        name: string;
+        schoolId: string;
+        schoolAddress: string;
+        contactAdminFirstName: string;
+        contactAdminLastName: string;
+        contactAdminPhone: string;
+        contactAdminEmail: string;
+      };
+    };
+    paymentItem: {
+      name: string;
+      description: string;
+      amount: string;
+    };
   };
 }
 
@@ -60,10 +84,10 @@ export default function Dashboard() {
     thisYear: 0,
   });
   //data fetching for pie chart props
-  // const [chartData, setChartData] = useState<
-  //   { browser: string; visitors: number; fill: string }[]
-  // >([]); // will uncoment when channels are available
-  //for graph component
+  const [chartData, setChartData] = useState<
+    { browser: string; visitors: number; fill: string }[]
+  >([]); // will uncoment when channels are available for graph component
+
   const [transactionData, setTransactionData] = useState<
     { day: string; count: number }[]
   >([]);
@@ -92,7 +116,7 @@ export default function Dashboard() {
         while (currentPage <= totalPages) {
           // Construct the base URL
           const url = new URL(
-            `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
+            `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments`
           );
 
           // Append the `school_id` parameter if provided
@@ -125,7 +149,8 @@ export default function Dashboard() {
         // Update state after all data is fetched
         setTransactions(allTransactions);
         computeTotals(allTransactions); // Calculate totals after all data is fetched
-        //processChartData(data); // Process chart data after transactions are fetched
+        processChartData(allTransactions); // Process chart data after transactions are fetched
+
         processGraphData(allTransactions); // Process graph data
       } catch (err: unknown) {
         setError(
@@ -163,41 +188,33 @@ export default function Dashboard() {
       .filter((t) => {
         const txnDate = new Date(t.updatedAt);
         txnDate.setHours(0, 0, 0, 0);
-        return (
-          t.status === "successful" && txnDate.getTime() === today.getTime()
-        );
+        return t.status === "paid" && txnDate.getTime() === today.getTime();
       })
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + t.transaction.amount, 0);
 
     const totalThisWeek = transactions
       .filter((t) => {
         const txnDate = new Date(t.updatedAt);
         txnDate.setHours(0, 0, 0, 0);
-        return (
-          t.status === "successful" && txnDate >= weekStart && txnDate <= now
-        );
+        return t.status === "paid" && txnDate >= weekStart && txnDate <= now;
       })
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + t.transaction.amount, 0);
 
     const totalThisMonth = transactions
       .filter((t) => {
         const txnDate = new Date(t.updatedAt);
         txnDate.setHours(0, 0, 0, 0);
-        return (
-          t.status === "successful" && txnDate >= monthStart && txnDate <= now
-        );
+        return t.status === "paid" && txnDate >= monthStart && txnDate <= now;
       })
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + t.transaction.amount, 0);
 
     const totalThisYear = transactions
       .filter((t) => {
         const txnDate = new Date(t.updatedAt);
         txnDate.setHours(0, 0, 0, 0);
-        return (
-          t.status === "successful" && txnDate >= yearStart && txnDate <= now
-        );
+        return t.status === "paid" && txnDate >= yearStart && txnDate <= now;
       })
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + t.transaction.amount, 0);
 
     setTotals({
       today: totalToday,
@@ -207,30 +224,30 @@ export default function Dashboard() {
     });
   };
 
-  // Function to process chart data
-  // const processChartData = (transactions: Transaction[]) => {
-  //   const processedData = [
-  //     {
-  //       browser: "WebPay",
-  //       visitors: transactions.filter(
-  //         (t) =>
-  //           t.channel === "WebPay" &&
-  //           new Date(t.updatedAt).getMonth() === new Date().getMonth()
-  //       ).length,
-  //       fill: "var(--color-chrome)",
-  //     },
-  //     {
-  //       browser: "Bankbranch",
-  //       visitors: transactions.filter(
-  //         (t) =>
-  //           t.channel === "Bankbranch" &&
-  //           new Date(t.updatedAt).getMonth() === new Date().getMonth()
-  //       ).length,
-  //       fill: "var(--color-safari)",
-  //     },
-  //   ];
-  //   setChartData(processedData);
-  // };
+  //Function to process chart data
+  const processChartData = (transactions: Transaction[]) => {
+    const processedData = [
+      {
+        browser: "WEB",
+        visitors: transactions.filter(
+          (t) =>
+            t.paymentChannel === "WEB" &&
+            new Date(t.updatedAt).getMonth() === new Date().getMonth()
+        ).length,
+        fill: "var(--color-chrome)",
+      },
+      {
+        browser: "Bank branc ",
+        visitors: transactions.filter(
+          (t) =>
+            t.paymentChannel === "Bank Branc" &&
+            new Date(t.updatedAt).getMonth() === new Date().getMonth()
+        ).length,
+        fill: "var(--color-safari)",
+      },
+    ];
+    setChartData(processedData);
+  };
 
   // Function to process graph data based on the transactions already fetched
   const processGraphData = (transactions: Transaction[]) => {
@@ -252,9 +269,7 @@ export default function Dashboard() {
     const filteredTransactions = transactions.filter((txn) => {
       const txnDate = new Date(txn.updatedAt); // Get the transaction date
       return (
-        txn.status === "successful" &&
-        txnDate >= startOfWeek &&
-        txnDate <= endOfWeek
+        txn.status === "paid" && txnDate >= startOfWeek && txnDate <= endOfWeek
       ); // Filter by week range
     });
 
@@ -430,12 +445,15 @@ export default function Dashboard() {
                 )
               )}
             </div>
-            <div className="flex w-[100%] items-start gap-10 mt-9 mb-9 ">
-              <div className=" w-[496px] h-[410px] p-2 bg-transparent rounded-md  ">
+            <div className="flex w-[100%] items-start gap-4 mt-9 mb-9 ">
+              <div className=" w-[440px] h-[410px] p-2 bg-transparent rounded-md  ">
                 <Graph chartData={transactionData} />
               </div>
-              <div className="p-2 w-[500px] h-[420px] bg-transparent rounded-md ">
-                {/* <ChartPie chartData={chartData} /> */}
+              <div className=" w-[302px] h-[410px] p-2">
+                <ChartPie chartData={chartData} />
+              </div>
+              <div className="p-2 w-[302px] h-[410px] bg-transparent rounded-md ">
+                {/* <RadialChart /> */}
               </div>
             </div>
           </div>

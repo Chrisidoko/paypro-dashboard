@@ -1,6 +1,6 @@
 // components/Sidebar/Sidebar.tsx
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { logout } from "../login/action";
 import {
@@ -8,9 +8,31 @@ import {
   LucideLayers,
   LucideInfo,
   LucideLogOut,
+  LucideBuilding,
 } from "lucide-react";
 
+// Define the User type
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  schoolID: number | null;
+  role: "admin" | "user"; // Add other properties
+}
+
 const Sidebar: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Fetch user data
+  useEffect(() => {
+    async function fetchUser() {
+      const response = await fetch("/api/session");
+      const data = await response.json();
+      setUser(data);
+    }
+    fetchUser();
+  }, []);
+
   return (
     <div
       className="h-[100%] fixed flex flex-col  bg-white text-[#1C2529] transition-all shadow-blue-gray-900/5 duration-300 
@@ -27,7 +49,18 @@ const Sidebar: React.FC = () => {
             </div>
           </Link>
         </li>
-
+        {/* Conditionally render the button */}
+        {user &&
+          user.id === "1" && ( // Replace `1` with the valid ID condition
+            <li className="py-[15px] px-[20px] w-[90%] h-[34px] flex items-center text-center cursor-pointer transition-all duration-300  text-[#737791] hover:text-white hover:bg-[#D33833] hover:rounded-[8px]">
+              <Link href="/institutions">
+                <div className="flex flex-row items-center  gap-[10px] ">
+                  <LucideBuilding size={18} />
+                  Institutions
+                </div>
+              </Link>
+            </li>
+          )}
         <li className="py-[15px] px-[20px] w-[90%] h-[34px] flex items-center text-center cursor-pointer transition-all duration-300  text-[#737791] hover:text-white hover:bg-[#D33833] hover:rounded-[8px] ">
           <Link href="/both">
             <div className="flex flex-row items-center gap-[10px] ">

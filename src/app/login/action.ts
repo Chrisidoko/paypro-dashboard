@@ -10,15 +10,15 @@ const testUsers = [
   {
     id: "1",
     email: "admin@example.com",
-    username: "KADUNA TETIARY INSTITUTION",
+    username: "KADUNA TERTIARY INSTITUTIONS",
     password: "12345678",
     schoolID: "",
     role: "admin", // Example differentiation field
   },
   {
-    id: "2",
+    id: "1",
     email: "admin@kadirs.com",
-    username: "KADUNA TETIARY INSTITUTION",
+    username: "KADUNA TERTIARY INSTITUTIONS",
     password: "admin@kadirs.com",
     schoolID: "",
     role: "admin", // Example differentiation field

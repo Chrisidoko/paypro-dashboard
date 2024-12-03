@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
 
 import {
@@ -59,7 +58,7 @@ export function ChartPie({ chartData }: ChartPieProps) {
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>This Month Payment Trends</CardTitle>
-        <CardDescription>November 2024</CardDescription>
+        <CardDescription>December 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -112,9 +111,6 @@ export function ChartPie({ chartData }: ChartPieProps) {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="flex mt-[20px] gap-[20px] leading-none text-muted-foreground">
           <div className="flex ">
             <div className="h-[13px] w-[20px] bg-[#e76e50] rounded mr-[5px]">
