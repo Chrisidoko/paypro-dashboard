@@ -48,7 +48,7 @@ export function Graph({ chartData }: GraphProps) {
     <Card>
       <CardHeader>
         <CardTitle>Revenue History</CardTitle>
-        <CardDescription>This Week</CardDescription>
+        <CardDescription>This Week Payment Trend</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
