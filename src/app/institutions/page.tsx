@@ -79,13 +79,26 @@ const Institutions = () => {
         [7, 8].includes(t.schoolId)
       );
 
-      // Group and compute totals by schoolId
+      // Define time periods
       const now = new Date();
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset to 12:00 AM of the current day
+
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - today.getDay()); // First day of the week (Sunday)
+
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1); // First day of the month
+
+      const yearStart = new Date(today.getFullYear(), 0, 1); // First day of the year
+
+      // Group and compute totals by schoolId
       const groupedTotals: Record<number, Totals> = {};
 
       filteredTransactions.forEach((transaction) => {
         const { schoolId, amount, updatedAt } = transaction;
         const transactionDate = new Date(updatedAt);
+        transactionDate.setHours(0, 0, 0, 0); // Normalize time to 12:00 AM
 
         if (!groupedTotals[schoolId]) {
           groupedTotals[schoolId] = {
@@ -96,20 +109,20 @@ const Institutions = () => {
           };
         }
 
-        const diffInDays = Math.floor(
-          (now.getTime() - transactionDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        if (diffInDays < 1) groupedTotals[schoolId].today += amount;
-        if (diffInDays < 7) groupedTotals[schoolId].thisWeek += amount;
-        if (
-          transactionDate.getMonth() === now.getMonth() &&
-          transactionDate.getFullYear() === now.getFullYear()
-        ) {
-          groupedTotals[schoolId].thisMonth += amount;
+        if (transactionDate.getTime() === today.getTime()) {
+          groupedTotals[schoolId].today += amount; // Same day
         }
-        if (transactionDate.getFullYear() === now.getFullYear()) {
-          groupedTotals[schoolId].thisYear += amount;
+
+        if (transactionDate >= weekStart && transactionDate <= now) {
+          groupedTotals[schoolId].thisWeek += amount; // Within the current week
+        }
+
+        if (transactionDate >= monthStart && transactionDate <= now) {
+          groupedTotals[schoolId].thisMonth += amount; // Within the current month
+        }
+
+        if (transactionDate >= yearStart && transactionDate <= now) {
+          groupedTotals[schoolId].thisYear += amount; // Within the current year
         }
       });
 
