@@ -27,7 +27,7 @@ const testUsers = [
     id: "3",
     email: "admin@cnmtw.com",
     username: "College of Midwifery Tudun Wada Kaduna",
-    password: "password123",
+    password: "password123@",
     schoolID: 7,
     role: "user", // Example differentiation field
   },
@@ -35,7 +35,7 @@ const testUsers = [
     id: "4",
     email: "emmanuelbalison@gmail.com",
     username: "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN",
-    password: "password123",
+    password: "password123@",
     schoolID: 8,
     role: "user", // Example differentiation field
   },
