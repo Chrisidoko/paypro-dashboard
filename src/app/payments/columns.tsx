@@ -125,6 +125,22 @@ export const columns: ColumnDef<Payment>[] = [
       return <span>{paymentItemName}</span>;
     },
   },
+  // {
+  //   accessorKey: "updatedAt",
+  //   header: "Date",
+  //   cell: ({ row }) => (
+  //     <TooltipProvider>
+  //       <Tooltip>
+  //         <TooltipTrigger>
+  //           <LucideMoreHorizontal size={16} />
+  //         </TooltipTrigger>
+  //         <TooltipContent>
+  //           <p>{row.original.updatedAt}</p>
+  //         </TooltipContent>
+  //       </Tooltip>
+  //     </TooltipProvider>
+  //   ),
+  // },
   {
     accessorKey: "txnRef",
     header: "Txn Ref",
@@ -132,7 +148,7 @@ export const columns: ColumnDef<Payment>[] = [
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
-            <LucideMoreHorizontal size={16} />
+            <LucideMoreHorizontal size={20} />
           </TooltipTrigger>
           <TooltipContent>
             <p>{row.original.txnRef}</p>
