@@ -76,7 +76,7 @@ const Institutions = () => {
 
       // Filter for the required schools (7 and 8)
       const filteredTransactions = transactions.filter((t) =>
-        [7, 8].includes(t.schoolId)
+        [7, 8, 11].includes(t.schoolId)
       );
 
       // Define time periods
@@ -181,8 +181,10 @@ const Institutions = () => {
                   <span className="text-[#D33833] mb-[30px] text-lg">
                     {Number(schoolId) === 7
                       ? "College of Midwifery Tudun Wada Kaduna"
-                      : Number(schoolId)
+                      : Number(schoolId) === 8
                       ? "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN"
+                      : Number(schoolId) === 11
+                      ? "Shehu Idris College Of Health Sci & Tech, Makarfi"
                       : `School ID: ${schoolId}`}
                   </span>
 

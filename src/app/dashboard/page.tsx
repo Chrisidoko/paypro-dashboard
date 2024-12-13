@@ -86,7 +86,7 @@ export default function Dashboard() {
   //data fetching for pie chart props
   const [chartData, setChartData] = useState<
     { browser: string; visitors: number; fill: string }[]
-  >([]); // will uncoment when channels are available for graph component
+  >([]);
 
   const [transactionData, setTransactionData] = useState<
     { day: string; count: number }[]
