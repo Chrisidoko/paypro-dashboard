@@ -109,48 +109,66 @@ export default function Dashboard() {
     async function fetchAllTransactions(schoolId: number | null = null) {
       setLoading(true); // Ensure loading is true when fetching starts
       let allTransactions: Transaction[] = [];
-      let currentPage = 1;
-      let totalPages = 1;
 
       try {
-        while (currentPage <= totalPages) {
-          // Construct the base URL
-          const url = new URL(
-            `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments`
-          );
+        // Construct the base URL
+        const baseUrl = `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments`;
 
-          // Append the `school_id` parameter if provided
+        // Create a URL for the initial fetch
+        const url = new URL(baseUrl);
+        if (schoolId !== null) {
+          url.searchParams.append("school_id", schoolId.toString());
+        }
+        url.searchParams.append("page", "1");
+
+        // Fetch the first page to get metadata
+        const initialResponse = await fetch(url.toString());
+        if (!initialResponse.ok) {
+          throw new Error(`Failed to fetch: ${initialResponse.statusText}`);
+        }
+
+        const initialData = await initialResponse.json();
+        const { meta, data } = initialData?.data || {};
+        const totalPages = meta?.lastPage || 1;
+
+        // Add the first page of transactions
+        if (data) {
+          allTransactions = allTransactions.concat(data);
+        }
+
+        // Create promises for the remaining pages
+        const fetchPromises = [];
+        for (let i = 2; i <= totalPages; i++) {
+          const pageUrl = new URL(baseUrl);
           if (schoolId !== null) {
-            url.searchParams.append("school_id", schoolId.toString());
+            pageUrl.searchParams.append("school_id", schoolId.toString());
           }
+          pageUrl.searchParams.append("page", i.toString());
+          fetchPromises.push(
+            fetch(pageUrl.toString()).then((response) => {
+              if (!response.ok) {
+                throw new Error(`Failed to fetch page ${i}`);
+              }
+              return response.json();
+            })
+          );
+        }
 
-          // Append pagination
-          url.searchParams.append("page", currentPage.toString());
+        // Fetch all pages in parallel
+        const results = await Promise.all(fetchPromises);
 
-          const response = await fetch(url.toString());
-
-          if (!response.ok) {
-            throw new Error(`Failed to fetch: ${response.statusText}`);
-          }
-
-          const apiResponse = await response.json();
-          const { data, meta } = apiResponse?.data;
-
-          // Add current page transactions to the list
+        // Consolidate all transactions
+        results.forEach((apiResponse) => {
+          const { data } = apiResponse?.data || {};
           if (data) {
             allTransactions = allTransactions.concat(data);
           }
-
-          // Update pagination info
-          currentPage = meta.currentPage + 1;
-          totalPages = meta.lastPage;
-        }
+        });
 
         // Update state after all data is fetched
         setTransactions(allTransactions);
         computeTotals(allTransactions); // Calculate totals after all data is fetched
         processChartData(allTransactions); // Process chart data after transactions are fetched
-
         processGraphData(allTransactions); // Process graph data
       } catch (err: unknown) {
         setError(

@@ -34,65 +34,108 @@ export default function Both() {
   const fetchAllTransactions = async (
     schoolId: number | null = null
   ): Promise<Payment[]> => {
-    const allTransactions: Payment[] = [];
-    let currentPage = 1;
-    let totalPages = 1;
-
     try {
-      while (currentPage <= totalPages) {
-        const apiUrl = new URL(
-          `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`
-        );
+      // Construct the base URL
+      const baseUrl = `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/transactions`;
 
-        // Append the `school_id` only if it's not null
-        if (schoolId) {
-          apiUrl.searchParams.append("school_id", schoolId.toString());
-        }
-
-        apiUrl.searchParams.append("page", currentPage.toString());
-
-        const response = await fetch(apiUrl.toString(), { cache: "no-store" });
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch: ${response.statusText}`);
-        }
-
-        const apiResponse = await response.json();
-        const { data, meta } = apiResponse.data;
-
-        const formattedData: Payment[] = data.map((txn: Payment) => ({
-          id: txn.id,
-          amount: txn.amount,
-          status: txn.status,
-          txnRef: txn.txnRef || "N/A",
-          createdAt: txn.createdAt,
-          updatedAt: txn.updatedAt,
-          paymentItem: {
-            name: txn.paymentItem?.name || "No Description",
-          },
-          student: {
-            firstName: txn.student?.firstName || "Unknown",
-            lastName: txn.student?.lastName || "Unknown",
-            studentId: txn.student?.studentId || "N/A",
-            school: {
-              name: txn.student?.school?.name || "No School Name",
-            },
-          },
-        }));
-
-        allTransactions.push(...formattedData);
-        currentPage = meta.currentPage + 1;
-        totalPages = meta.lastPage;
+      // Create the initial request to get metadata (total pages)
+      const initialUrl = new URL(baseUrl);
+      if (schoolId) {
+        initialUrl.searchParams.append("school_id", schoolId.toString());
       }
+      initialUrl.searchParams.append("page", "1");
+
+      const initialResponse = await fetch(initialUrl.toString(), {
+        cache: "no-store",
+      });
+      if (!initialResponse.ok) {
+        throw new Error(`Failed to fetch: ${initialResponse.statusText}`);
+      }
+
+      const initialData = await initialResponse.json();
+      const { meta, data } = initialData?.data || {};
+      const totalPages = meta?.lastPage || 1;
+
+      // Format the first page of data
+      const allTransactions: Payment[] = data.map((txn: Payment) => ({
+        id: txn.id,
+        amount: txn.amount,
+        status: txn.status,
+        txnRef: txn.txnRef || "N/A",
+        createdAt: txn.createdAt,
+        updatedAt: txn.updatedAt,
+        paymentItem: {
+          name: txn.paymentItem?.name || "No Description",
+        },
+        student: {
+          firstName: txn.student?.firstName || "Unknown",
+          lastName: txn.student?.lastName || "Unknown",
+          studentId: txn.student?.studentId || "N/A",
+          school: {
+            name: txn.student?.school?.name || "No School Name",
+          },
+        },
+      }));
+
+      // Create an array of promises for fetching remaining pages
+      const fetchPromises = [];
+      for (let i = 2; i <= totalPages; i++) {
+        const pageUrl = new URL(baseUrl);
+        if (schoolId) {
+          pageUrl.searchParams.append("school_id", schoolId.toString());
+        }
+        pageUrl.searchParams.append("page", i.toString());
+
+        fetchPromises.push(
+          fetch(pageUrl.toString(), { cache: "no-store" })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`Failed to fetch page ${i}`);
+              }
+              return response.json();
+            })
+            .then((apiResponse) => {
+              const pageData = apiResponse.data.data;
+              return pageData.map((txn: Payment) => ({
+                id: txn.id,
+                amount: txn.amount,
+                status: txn.status,
+                txnRef: txn.txnRef || "N/A",
+                createdAt: txn.createdAt,
+                updatedAt: txn.updatedAt,
+                paymentItem: {
+                  name: txn.paymentItem?.name || "No Description",
+                },
+                student: {
+                  firstName: txn.student?.firstName || "Unknown",
+                  lastName: txn.student?.lastName || "Unknown",
+                  studentId: txn.student?.studentId || "N/A",
+                  school: {
+                    name: txn.student?.school?.name || "No School Name",
+                  },
+                },
+              }));
+            })
+        );
+      }
+
+      // Wait for all page fetches to resolve
+      const results = await Promise.all(fetchPromises);
+
+      // Flatten and combine all transactions
+      results.forEach((pageTransactions) => {
+        allTransactions.push(...pageTransactions);
+      });
+
+      return allTransactions;
     } catch (error: unknown) {
       console.error("Failed to fetch transactions:", error);
       setError(
         (error as { message?: string })?.message ||
           "An unexpected error occurred"
       );
+      return [];
     }
-
-    return allTransactions;
   };
 
   useEffect(() => {

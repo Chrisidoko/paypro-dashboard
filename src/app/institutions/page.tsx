@@ -53,14 +53,28 @@ const Institutions = () => {
   useEffect(() => {
     async function fetchTransactions() {
       let transactions: Transaction[] = [];
-      let page = 1;
 
-      // Paginate and fetch transactions
-      while (true) {
-        const response = await fetch(
-          `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments?page=${page}`
-        );
-        const data = await response.json();
+      // First, fetch metadata to determine the total number of pages
+      const initialResponse = await fetch(
+        `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments?page=1`
+      );
+      const initialData = await initialResponse.json();
+      const totalPages = initialData.data.meta.lastPage;
+
+      // Generate an array of promises for all pages
+      const fetchPromises = Array.from({ length: totalPages }, (_, i) =>
+        fetch(
+          `https://cors-anywhere-clone.onrender.com/https://api.kaduna.payprosolutionsltd.com/api/v1/payments?page=${
+            i + 1
+          }`
+        ).then((response) => response.json())
+      );
+
+      // Fetch all pages in parallel
+      const results = await Promise.all(fetchPromises);
+
+      // Consolidate all transactions
+      results.forEach((data) => {
         transactions = [
           ...transactions,
           ...data.data.data.map((item: any) => ({
@@ -69,14 +83,11 @@ const Institutions = () => {
             updatedAt: item.transaction.updatedAt,
           })),
         ];
-
-        if (data.data.meta.currentPage === data.data.meta.lastPage) break;
-        page++;
-      }
+      });
 
       // Filter for the required schools (7 and 8)
       const filteredTransactions = transactions.filter((t) =>
-        [7, 8, 11].includes(t.schoolId)
+        [7, 8, 11, 12].includes(t.schoolId)
       );
 
       // Define time periods
@@ -185,6 +196,8 @@ const Institutions = () => {
                       ? "COLLEGE OF NURSING AND MIDWIFERY KAFANCHAN"
                       : Number(schoolId) === 11
                       ? "Shehu Idris College Of Health Sci & Tech, Makarfi"
+                      : Number(schoolId) === 12
+                      ? "Kaduna State College of Nursing and Midwifery"
                       : `School ID: ${schoolId}`}
                   </span>
 
