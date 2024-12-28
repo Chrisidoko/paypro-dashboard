@@ -47,6 +47,14 @@ const testUsers = [
     schoolID: 11,
     role: "user", // Example differentiation field
   },
+  {
+    id: "6",
+    email: "coegidanwaya@gmail.com",
+    username: "Kaduna State College of Education, Gidan Waya",
+    password: "coegidanwaya",
+    schoolID: 9,
+    role: "user", // Example differentiation field
+  },
 ];
 
 const loginSchema = z.object({

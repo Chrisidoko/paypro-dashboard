@@ -87,7 +87,7 @@ const Institutions = () => {
 
       // Filter for the required schools (7 and 8)
       const filteredTransactions = transactions.filter((t) =>
-        [7, 8, 11, 12].includes(t.schoolId)
+        [7, 8, 11, 12, 9].includes(t.schoolId)
       );
 
       // Define time periods
@@ -198,6 +198,8 @@ const Institutions = () => {
                       ? "Shehu Idris College Of Health Sci & Tech, Makarfi"
                       : Number(schoolId) === 12
                       ? "Kaduna State College of Nursing and Midwifery"
+                      : Number(schoolId) === 9
+                      ? "Kaduna State College of Education, Gidan Waya"
                       : `School ID: ${schoolId}`}
                   </span>
 
