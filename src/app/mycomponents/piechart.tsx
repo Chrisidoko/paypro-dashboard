@@ -54,11 +54,20 @@ export function ChartPie({ chartData }: ChartPieProps) {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, [chartData]);
 
+  // Get the current date
+  const currentDate = new Date();
+  // Get the full year
+  const year = currentDate.getFullYear();
+  // Get the current month (e.g., "December")
+  const month = currentDate.toLocaleString("default", { month: "long" });
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>Monthly Payment Channel</CardTitle>
-        <CardDescription>December 2024</CardDescription>
+        <CardDescription>
+          {month} {year}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer

@@ -61,6 +61,7 @@ export default function Both() {
         id: txn.id,
         amount: txn.amount,
         status: txn.status,
+        paymentChannel: txn.paymentChannel,
         txnRef: txn.txnRef || "N/A",
         createdAt: txn.createdAt,
         updatedAt: txn.updatedAt,
@@ -100,6 +101,7 @@ export default function Both() {
                 id: txn.id,
                 amount: txn.amount,
                 status: txn.status,
+                paymentChannel: txn.paymentChannel,
                 txnRef: txn.txnRef || "N/A",
                 createdAt: txn.createdAt,
                 updatedAt: txn.updatedAt,
@@ -136,6 +138,47 @@ export default function Both() {
       );
       return [];
     }
+  };
+
+  const exportToCSV = () => {
+    const csvHeaders = [
+      "ID",
+      "Student ID",
+      "First Name",
+      "Last Name",
+      "Status",
+      "Amount",
+      "School Name",
+      "Fee",
+      "Payment Channel",
+      "Date",
+    ];
+
+    const csvRows = transactions.map((txn) => [
+      txn.id,
+      txn.student?.studentId,
+      txn.student?.firstName,
+      txn.student?.lastName,
+      txn.status,
+      txn.amount,
+      txn.student?.school?.name,
+      txn.paymentItem?.name,
+      txn.paymentChannel,
+      txn.updatedAt,
+    ]);
+
+    const csvContent = [
+      csvHeaders.join(","),
+      ...csvRows.map((row) => row.join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Transactions.csv";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
@@ -239,8 +282,18 @@ export default function Both() {
             </div>
           </div>
           <div className="ml-[56px] mr-[56px] pt-[50px]">
-            <div className="scroll-m-20 text-4xl text-[#151D48] font-extrabold tracking-tight lg:text-4xl mb-[18px]">
-              Transaction History
+            <div className="flex">
+              <div className="scroll-m-20 text-4xl text-[#151D48] font-extrabold tracking-tight lg:text-4xl mb-[18px]">
+                Transaction History
+              </div>
+              <span className="ml-auto">
+                <button
+                  className="bg-white text-[#151D48] text-sm font-medium py-1 px-3 rounded border "
+                  onClick={exportToCSV}
+                >
+                  Export to CSV
+                </button>
+              </span>
             </div>
             <DataTable columns={columns} data={transactions} />
           </div>

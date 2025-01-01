@@ -18,6 +18,7 @@ export interface Payment {
   amount: number;
   paymentReference: string;
   status: "pending" | "completed" | "failed"; // Adjust based on possible values
+  paymentChannel: string;
   createdAt: string;
   updatedAt: string;
   studentId: number;
