@@ -246,7 +246,7 @@ export default function Dashboard() {
   const processChartData = (transactions: Transaction[]) => {
     const processedData = [
       {
-        browser: "WEB",
+        browser: "Quickteller",
         visitors: transactions.filter(
           (t) =>
             t.paymentChannel === "WEB" &&

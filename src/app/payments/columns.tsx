@@ -87,6 +87,9 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   // {
   //   accessorKey: "email",
@@ -104,6 +107,7 @@ export const columns: ColumnDef<Payment>[] = [
   // },
   {
     accessorKey: "student.school.name",
+    id: "schoolName",
     header: ({ column }) => {
       return (
         <Button
@@ -115,15 +119,32 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       );
     },
+    cell: ({ getValue }) => {
+      const value = getValue() as string; // Get the value for this cell
+      const truncatedValue =
+        value.length > 20 ? `${value.slice(0, 20)}...` : value; // Truncate to 20 characters
+      return (
+        <div className="truncate" title={value}>
+          {truncatedValue}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "paymentItem.name",
     header: "Desc",
-    cell: ({ row }) => {
+    cell: ({ getValue }) => {
       // Safely access `paymentItem.name` or provide a fallback
-      const paymentItemName =
-        row.original.paymentItem?.name || "No Description";
-      return <span>{paymentItemName}</span>;
+      const value = getValue() as string; // Get the value for this cell
+      const truncatedValue =
+        value.length > 20 ? `${value.slice(0, 20)}...` : value; // Truncate to 20 characters
+      // const paymentItemName =
+      // getValue.original.paymentItem?.name || "No Description";
+      return (
+        <div className="truncate" title={value}>
+          {truncatedValue}
+        </div>
+      );
     },
   },
   // {
@@ -157,6 +178,30 @@ export const columns: ColumnDef<Payment>[] = [
         </Tooltip>
       </TooltipProvider>
     ),
+  },
+  {
+    accessorKey: "updatedAt",
+    id: "Date",
+    header: "Date",
+    cell: ({ row }) => {
+      const date = new Date(row.original.updatedAt); // Convert to Date object
+      return (
+        <p>
+          {date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const rowDate = new Date(row.getValue(id));
+      const [startDate, endDate] = value;
+      return rowDate >= startDate && rowDate <= endDate;
+    },
   },
 
   {

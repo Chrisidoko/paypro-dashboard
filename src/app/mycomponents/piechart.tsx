@@ -40,7 +40,7 @@ const chartConfig = {
     label: "Visitors",
   },
   chrome: {
-    label: "Web",
+    label: "Quickteller",
     color: "hsl(var(--chart-1))",
   },
   safari: {
