@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 "use client";
 
 import { LucideX } from "lucide-react";
@@ -16,11 +14,11 @@ import { DataTableViewOptions } from "./data-table-view-options";
 import { saveAs } from "file-saver";
 import { Payment } from "./columns";
 
-interface DataTableToolbarProps<TData extends Record<string, unknown>> {
+interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTableToolbar<TData extends Record<string, unknown>>({
+export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
