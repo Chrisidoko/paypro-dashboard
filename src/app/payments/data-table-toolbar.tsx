@@ -52,7 +52,7 @@ export function DataTableToolbar<TData extends Record<string, unknown>>({
       }`,
       schoolName: row.original.student?.school?.name || "N/A",
       status: row.original.status || "N/A",
-      paymentChannel: row.original.paymentChannel || "N/A", // Include paymentChannel
+      // paymentChannel: row.original.paymentChannel || "N/A", // Include paymentChannel
       amount: row.original.amount || 0,
       txnRef: row.original.txnRef || "N/A",
       createdAt: row.original.createdAt || "N/A",
@@ -65,7 +65,7 @@ export function DataTableToolbar<TData extends Record<string, unknown>>({
 
     const csvContent = [
       // Define headers
-      "Student ID,Student Name,School,Status,Payment Channel,Amount,Transaction Reference,Created At,Updated At",
+      "Student ID,Student Name,School,Status,Amount,Transaction Reference,Created At,Updated At",
       ...csvData.map((row) =>
         // Map row values
         [
@@ -73,7 +73,7 @@ export function DataTableToolbar<TData extends Record<string, unknown>>({
           row.name,
           row.schoolName,
           row.status,
-          row.paymentChannel,
+          // row.paymentChannel,
           row.amount,
           row.txnRef,
           row.createdAt,
