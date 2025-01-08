@@ -140,46 +140,46 @@ export default function Both() {
     }
   };
 
-  const exportToCSV = () => {
-    const csvHeaders = [
-      "ID",
-      "Student ID",
-      "First Name",
-      "Last Name",
-      "Status",
-      "Amount",
-      "School Name",
-      "Fee",
-      "Payment Channel",
-      "Date",
-    ];
+  // const exportToCSV = () => {
+  //   const csvHeaders = [
+  //     "ID",
+  //     "Student ID",
+  //     "First Name",
+  //     "Last Name",
+  //     "Status",
+  //     "Amount",
+  //     "School Name",
+  //     "Fee",
+  //     "Payment Channel",
+  //     "Date",
+  //   ];
 
-    const csvRows = transactions.map((txn) => [
-      txn.id,
-      txn.student?.studentId,
-      txn.student?.firstName,
-      txn.student?.lastName,
-      txn.status,
-      txn.amount,
-      txn.student?.school?.name,
-      txn.paymentItem?.name,
-      txn.paymentChannel,
-      txn.updatedAt,
-    ]);
+  //   const csvRows = transactions.map((txn) => [
+  //     txn.id,
+  //     txn.student?.studentId,
+  //     txn.student?.firstName,
+  //     txn.student?.lastName,
+  //     txn.status,
+  //     txn.amount,
+  //     txn.student?.school?.name,
+  //     txn.paymentItem?.name,
+  //     txn.paymentChannel,
+  //     txn.updatedAt,
+  //   ]);
 
-    const csvContent = [
-      csvHeaders.join(","),
-      ...csvRows.map((row) => row.join(",")),
-    ].join("\n");
+  //   const csvContent = [
+  //     csvHeaders.join(","),
+  //     ...csvRows.map((row) => row.join(",")),
+  //   ].join("\n");
 
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Transactions.csv";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  //   const blob = new Blob([csvContent], { type: "text/csv" });
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement("a");
+  //   a.href = url;
+  //   a.download = "Transactions.csv";
+  //   a.click();
+  //   URL.revokeObjectURL(url);
+  // };
 
   useEffect(() => {
     const loadUserAndTransactions = async () => {
@@ -287,12 +287,12 @@ export default function Both() {
                 Transaction History
               </div>
               <span className="ml-auto">
-                <button
+                {/* <button
                   className="bg-white text-[#151D48] text-sm font-medium py-1 px-3 rounded border "
                   onClick={exportToCSV}
                 >
                   Export to CSV
-                </button>
+                </button> */}
               </span>
             </div>
             <DataTable columns={columns} data={transactions} />
