@@ -1,8 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -105,9 +106,19 @@ export const columns: ColumnDef<Payment>[] = [
   //   },
   // },
   {
-    id: "schoolName", // Unique column ID
-    header: "Institution",
-    accessorFn: (row) => row.student?.school?.name || "N/A", // Safely access nested property
+    accessorKey: "student.school.name",
+    id: "schoolName",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          School
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ getValue }) => {
       const value = getValue() as string; // Get the value for this cell
       const truncatedValue =
