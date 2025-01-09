@@ -8,11 +8,20 @@ import { Input } from "@/components/ui/input";
 import { school, status } from "../payments/data";
 import { DataTableFacetedFilter } from "../payments/data-table-faceted-filter";
 import { CalendarDatePicker } from "@/components/calendar-date-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTableViewOptions } from "./data-table-view-options";
 
 import { saveAs } from "file-saver";
 import { Payment } from "./columns";
+
+// Define the User type
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  schoolID: number | null;
+  role: "admin" | "user"; // Add other properties
+}
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -21,6 +30,18 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
+  const [user, setUser] = useState<User | null>(null);
+
+  // Fetch user data
+  useEffect(() => {
+    async function fetchUser() {
+      const response = await fetch("/api/session");
+      const data = await response.json();
+      setUser(data);
+    }
+    fetchUser();
+  }, []);
+
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -105,7 +126,8 @@ export function DataTableToolbar<TData>({
             />
           )}
 
-          {table.getColumn("schoolName") && (
+          {/* Conditionally render the button */}
+          {user && user.id === "1" && table.getColumn("schoolName") && (
             <DataTableFacetedFilter
               column={table.getColumn("schoolName")}
               title="Institution"
