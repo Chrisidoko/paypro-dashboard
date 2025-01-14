@@ -11,7 +11,7 @@ export default function PersistentLayout({
   const pathname = usePathname();
 
   // Define routes where the sidebar should not be displayed
-  const excludedRoutes = ["/login", "/register"];
+  const excludedRoutes = ["/login", "/register", "/"];
 
   const showSidebar = !excludedRoutes.includes(pathname);
 
