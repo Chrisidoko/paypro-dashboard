@@ -238,6 +238,14 @@ export default function BankBranch() {
     );
   }
 
+  if (transactions.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>No transactions found</p>
+      </div>
+    );
+  }
+
   return (
     <main>
       <div className="w-full w-full h-full transition-all duration-300 bg-[#FAFBFD]">
