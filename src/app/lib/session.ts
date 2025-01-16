@@ -58,6 +58,13 @@ const testUsers: User[] = [
     schoolID: 9,
     role: "user", // Example differentiation field
   },
+  {
+    id: "7",
+    email: "kasu@gmail.com",
+    username: "Kaduna State College of Education, Gidan Waya",
+    schoolID: 1003,
+    role: "user", // Example differentiation field
+  },
 ];
 
 export async function createSession(userId: string) {

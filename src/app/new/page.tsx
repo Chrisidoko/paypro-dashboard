@@ -71,34 +71,31 @@ export default function BankBranch() {
   }, []);
 
   useEffect(() => {
-    async function fetchAllTransactions(schoolId: string | null = null) {
+    async function fetchAllTransactions(schoolId: number | null = null) {
       setLoading(true);
       let allTransactions: Payment[] = [];
 
       try {
         const baseUrl = `https://paypro.quantumcloud.ng/api/paykaduna/allTransactions/`;
-
-        // Construct the URL for the first page
         const url = new URL(baseUrl);
 
-        // Convert schoolId to string if it's a number
+        // Only append the `school_id` if it exists
         if (schoolId) {
           url.searchParams.append("school_id", String(schoolId));
         }
+
         url.searchParams.append("page", "1");
+        url.searchParams.append("t", Date.now().toString());
 
-        //console.log("Fetching transactions from:", url.toString());
-
-        // Fetch the first page
+        console.log("Fetching first page from:", url.toString());
         const initialResponse = await fetch(url.toString());
         if (!initialResponse.ok) {
           throw new Error(`Failed to fetch: ${initialResponse.statusText}`);
         }
 
         const initialData = await initialResponse.json();
-        //console.log("Initial API Response:", initialData);
+        console.log("Initial API Response:", initialData);
 
-        // Ensure the response is successful
         if (!initialData.status) {
           throw new Error("API responded with an error status.");
         }
@@ -106,21 +103,23 @@ export default function BankBranch() {
         const { data, metadata } = initialData;
         const totalPages = metadata?.last_page || 1;
 
-        // Add the first page of data
-        if (Array.isArray(data)) {
-          allTransactions = allTransactions.concat(data);
-        }
+        allTransactions = Array.isArray(data)
+          ? allTransactions.concat(data)
+          : allTransactions;
 
-        // Fetch remaining pages if applicable
+        // Fetch remaining pages
         const fetchPromises = [];
         for (let i = 2; i <= totalPages; i++) {
           const pageUrl = new URL(baseUrl);
+
           if (schoolId) {
             pageUrl.searchParams.append("school_id", String(schoolId));
           }
-          pageUrl.searchParams.append("page", i.toString());
 
-          // console.log(`Fetching page ${i} from:`, pageUrl.toString());
+          pageUrl.searchParams.append("page", i.toString());
+          pageUrl.searchParams.append("t", Date.now().toString());
+
+          console.log(`Fetching page ${i} from:`, pageUrl.toString());
 
           fetchPromises.push(
             fetch(pageUrl.toString())
@@ -139,16 +138,20 @@ export default function BankBranch() {
           );
         }
 
-        const results = await Promise.all(fetchPromises);
-
-        results.forEach((pageData) => {
-          allTransactions = allTransactions.concat(pageData);
+        const results = await Promise.allSettled(fetchPromises);
+        results.forEach((result, index) => {
+          if (result.status === "fulfilled") {
+            console.log(`Page ${index + 2} fetched successfully`);
+            allTransactions = allTransactions.concat(result.value);
+          } else {
+            console.error(`Error fetching page ${index + 2}:`, result.reason);
+          }
         });
 
         setTransactions(allTransactions);
-        computeTotals(allTransactions); // Calculate totals after all data is fetched
+        computeTotals(allTransactions);
       } catch (err: unknown) {
-        //console.error("Error fetching transactions:", err);
+        console.error("Error fetching transactions:", err);
         setError((err as Error).message || "An unexpected error occurred");
       } finally {
         setLoading(false);
@@ -156,8 +159,7 @@ export default function BankBranch() {
     }
 
     if (user) {
-      // console.log("Fetching transactions for user:", user);
-      fetchAllTransactions(String(user.schoolID));
+      fetchAllTransactions(user.schoolID || null);
     }
   }, [user]);
 
@@ -297,7 +299,7 @@ export default function BankBranch() {
                       {idx === 0
                         ? "Within the last 24 hours"
                         : idx === 1
-                        ? "From the first day of this week"
+                        ? "Sum for this week"
                         : idx === 2
                         ? "Sum total for this month"
                         : "Sum for the year"}
